@@ -1,0 +1,7 @@
+.spyproject
+.vscode
+.pycache
+.idea
+/test_files
+src/conf/__pycache__
+**.pycache
