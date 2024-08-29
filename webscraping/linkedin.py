@@ -3,12 +3,21 @@ Cette classe nous permet de webscrapper les données du site LinkedIn.
 
 """
 
+import sys
+sys.path.append('../')
+
+import pandas as pd
+
 
 import requests
 from bs4 import BeautifulSoup as bs_linkedin 
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import lit
+
+from configs.conf import es
+from common.utils import insert_data_elk
+
 
 url_linkedin ='https://www.linkedin.com/jobs/search?trk=guest_homepage-basic_guest_nav_menu_jobs&position='
 
@@ -153,7 +162,6 @@ for job_link in job_links:
 
 
 #Create dataframa
-import pandas as pd
 
 #spark = SparkSession.builder.appName("linkedin").getOrCreate()
 
@@ -167,6 +175,7 @@ df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locat
                        columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time"]).reset_index(drop=True)
                                  
 df_linkedin_scrapping["source"] = "linkedin"
+df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
 
 
 
@@ -174,11 +183,26 @@ df_linkedin_scrapping.shape
 
 
 print("/////////////////////////////////////")
-print(type(df_linkedin_scrapping))
+#print(type(df_linkedin_scrapping))
 print(df_linkedin_scrapping.head(5))
 
 
-            
+from elasticsearch import Elasticsearch
+
+
+#Write df in ElasticSearch
+
+#Create index in needed
+#if not es.indices.exists(index="bigdata-linkedin"):
+#    es.indices.create(index="bigdata-linkedin")
+
+
+insert_data_elk(df_linkedin_scrapping)
+
+
+# Search document
+res = es.search(index="bigdata-linkedin", body={"query": {"match_all": {}}})
+print(res)
 
 
 

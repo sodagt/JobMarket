@@ -2,6 +2,11 @@
 Cette classe nous permet de webscrapper les données du site Adzuna.
 
 """
+import sys
+sys.path.append('../')
+
+#from sys import argv
+
 
 import requests
 from bs4 import BeautifulSoup as bs_adzuna
@@ -11,9 +16,11 @@ import json
 from pyspark.sql import SparkSession as spark
 from pyspark.sql.functions import lit
 
-#from elasticsearch import Elasticsearch, helpers
+#from elasticsearch import Elasticsearch
+#from elasticsearch.helpers import bulk
 
-#es http://@localhost:9200
+from configs.conf import es
+from common.utils import insert_data_elk
 
 
 
@@ -52,12 +59,28 @@ for i in range(1,2):
     recs_new = new_data['results']
     df_new = pd.json_normalize(recs_new)
     df = pd.concat([df, df_new]).reset_index(drop=True)
-    #3299
     df["source"] = "adzuna"
 
     
 print("/////////////////////////////////////")
-
 print(df.head(5))
 #print(df.columns)
 #print(df['company.display_name'].head(5))
+
+
+
+#Write df in ElasticSearch
+
+# Create index in needed
+#if not es.indices.exists(index="bigdata-adzuna"):
+#    es.indices.create(index="bigdata-adzuna")
+
+
+
+insert_data_elk(df)
+
+df['ingest_date'] = pd.Timestamp.now()
+
+# Search document
+res = es.search(index="bigdata-adzuna", body={"query": {"match_all": {}}})
+print(res)
