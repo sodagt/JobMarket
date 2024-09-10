@@ -33,3 +33,8 @@ def insert_data_elk(df: DataFrame):
 
     except Exception as e:
         print(f"Error: {e}")
+
+#Fonction permettanr d'etraire une information à partir d'un champ contenant une liste
+def extract_values(column_to_extract, value):
+    values_to_extract = [item[value] for item in column_to_extract]
+    return values_to_extract

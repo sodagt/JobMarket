@@ -13,8 +13,6 @@ from bs4 import BeautifulSoup as bs_adzuna
 import pandas as pd
 import json
 
-from pyspark.sql import SparkSession as spark
-from pyspark.sql.functions import lit
 
 #from elasticsearch import Elasticsearch
 #from elasticsearch.helpers import bulk
@@ -71,9 +69,9 @@ print(df.head(5))
 
 #Write df in ElasticSearch
 
-# Create index in needed
-#if not es.indices.exists(index="bigdata-adzuna"):
-#    es.indices.create(index="bigdata-adzuna")
+#Create index in needed
+if not es.indices.exists(index="bigdata-adzuna"):
+   es.indices.create(index="bigdata-adzuna")
 
 
 
