@@ -4,7 +4,6 @@
 ''' Extraction des infos via l'API TheMuse sur les jobs et les companies disponibles
 Version Mai 2024'''
 
-
 import requests
 import pandas as pd
 
@@ -103,6 +102,9 @@ for num_page in range (1,max_page_companies+1):
 # Appliquer la fonction sur la colonne
 df_companies['locations'] = df_companies['locations'].apply(extract_names)
 df_companies['industries'] = df_companies['industries'].apply(extract_names)
+
+df_companies.to_pickle('data/raw/companies_muse_sept.pkl')
+df_jobs_themuse.to_pickle('data/raw/jobs_muse_sept.pkl')
 
 
 
