@@ -7,13 +7,13 @@ import sys
 sys.path.append('../')
 
 import pandas as pd
-
+import pickle
 
 import requests
 from bs4 import BeautifulSoup as bs_linkedin 
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import lit
+#from pyspark.sql import SparkSession
+#from pyspark.sql.functions import lit
 
 from configs.conf import es
 from common.utils import insert_data_elk
@@ -196,13 +196,15 @@ from elasticsearch import Elasticsearch
 #if not es.indices.exists(index="bigdata-linkedin"):
 #    es.indices.create(index="bigdata-linkedin")
 
-
-insert_data_elk(df_linkedin_scrapping)
+#Save raw data
+df_linkedin_scrapping.to_pickle('data/raw/jobs_linkedin_sept.pkl')
+''' 
+#insert_data_elk(df_linkedin_scrapping)
 
 
 # Search document
 res = es.search(index="bigdata-linkedin", body={"query": {"match_all": {}}})
 print(res)
-
+'''
 
 

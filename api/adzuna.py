@@ -65,13 +65,16 @@ print(df.head(5))
 #print(df.columns)
 #print(df['company.display_name'].head(5))
 
+#save raw data
+df.to_pickle('data/raw/jobs_adzuna_sept.pkl')
 
-
+''' 
 #Write df in ElasticSearch
 
 #Create index in needed
 if not es.indices.exists(index="bigdata-adzuna"):
    es.indices.create(index="bigdata-adzuna")
+
 
 
 
@@ -82,3 +85,5 @@ df['ingest_date'] = pd.Timestamp.now()
 # Search document
 res = es.search(index="bigdata-adzuna", body={"query": {"match_all": {}}})
 print(res)
+
+'''

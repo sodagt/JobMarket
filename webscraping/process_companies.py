@@ -17,8 +17,8 @@ from common.utils import clean_text
 pd.set_option('display.max_colwidth', None)
 
 #chargement du df des compagnies welcome to the jungle
-companies_wttj = pd.read_pickle('data/raw/companies_wttj_aout.pkl')
-companies_themuse = pd.read_pickle('/Users/sodagayethiam/Documents/Formations/Parcours_data_engineer/projet_jobmarket/JobMarket/data/raw/companies_muse_sept.pkl')
+companies_wttj = pd.read_pickle('../data/raw/companies_wttj_aout.pkl')
+companies_themuse = pd.read_pickle('../data/raw/companies_muse_sept.pkl')
 
 
 
