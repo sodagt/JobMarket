@@ -61,7 +61,9 @@ wttj_selected = companies_wttj[['name_company', 'linkedin_link', 'twitter_link_e
 'parity_men','avg_age','ca','source']].rename(columns={'twitter_link_element': 'twitter_link', 'contents': 'description',
 'location': 'locations','domain': 'industries','url_company': 'url_jobs','avg_age': 'avg_age_employees'})
 
-wttj_selected['publication_date']='not available'
+wttj_selected['publication_date'] = None
+
+#wttj_selected['publication_date']='not available'
 wttj_selected['size']='not available'
 wttj_selected['logo']='not available'
 
