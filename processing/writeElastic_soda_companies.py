@@ -29,6 +29,11 @@ companies['publication_date'] = companies['publication_date'].replace('', None)
 
 insert_data_elk(companies)
 
+
+res = es.search(index="all_companies", body={"query": {"match_all": {}}})
+print(res)
+
+
 #insert_data_elk2(companies,'all_companies' )
 
 #print (companies.publication_date)
