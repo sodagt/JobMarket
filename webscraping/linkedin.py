@@ -3,8 +3,8 @@ Cette classe nous permet de webscrapper les données du site LinkedIn.
 
 """
 
-import sys
-sys.path.append('../')
+#import sys
+#sys.path.append('../')
 
 import pandas as pd
 import pickle
@@ -15,8 +15,8 @@ from bs4 import BeautifulSoup as bs_linkedin
 #from pyspark.sql import SparkSession
 #from pyspark.sql.functions import lit
 
-from configs.conf import es
-from common.utils import insert_data_elk
+#from configs.conf import es
+#from common.utils import insert_data_elk
 
 
 url_linkedin ='https://www.linkedin.com/jobs/search?trk=guest_homepage-basic_guest_nav_menu_jobs&position='
@@ -26,7 +26,7 @@ url_linkedin_salary_range = 'https://www.linkedin.com/jobs/search?keywords=&loca
 url_linkedin_product_manager = 'https://www.linkedin.com/jobs/search?keywords=product%20manager&location=%C3%89tats-Unis&geoId=&trk=public_jobs_jobs-search-bar_search-submit&position='
 
 
-job_titles,job_companies,job_locations,job_links, jobs_posted_times  = [],[],[],[],[]
+job_titles,job_companies,job_locations,job_links, jobs_posted_times, company_links  = [],[],[],[],[],[]
 
 max_page_number = 1
 
@@ -112,6 +112,18 @@ for job_link in job_links:
         salary_compensation = soup_jobs_link.find('div',class_='salary compensation__salary')
         salary_card_info = soup_jobs_link.find('span',class_='aside-job-card__salary-info')
         
+        #get company link
+        company_link =  soup_jobs_link.find('a', class_='topcard__org-name-link')
+        #company_links.append(company_link)
+        if company_link is not None:
+            #print("Company Link:", company_link)
+            company_links.append(company_link['href'])
+
+        #else:
+         #   print("No link found with the specified class.")
+
+
+        
         if salary_info_block is not None: 
             salary = salary_info_block.text.strip().replace('\n','').replace('\t','')
             salary_min = salary.split('-')[0]
@@ -160,19 +172,94 @@ for job_link in job_links:
 
 
 
+company_name,company_description,company_website,company_industries,company_size,company_location,company_type,company_creation_date,company_specialities = [],[],[],[],[],[],[],[],[]
+
+
+#get more information from company link
+
+for company_link in company_links:
+        
+        #linkedin_company_link = requests.get(company_link)
+        url_company='https://www.linkedin.com/company/computercore?trk=public_jobs_topcard-org-name'
+        linkedin_company_link = requests.get(url_company)
+        soup_company_link = bs_linkedin(linkedin_company_link.content,"lxml")
+        #company_name, company_website, description, publication_date, creation_date, nb_employee, size
+        #logo, location, industries, parity_women parity_men, avg_age_employees, ca, source, insta/face
+
+
+        #get company info
+
+        #name_test = soup_company_link.find('h1',class_='top-card-layout__title')
+        #if name_test is not None:
+        print( soup_company_link)
+        name = soup_company_link.find('h1',class_='top-card-layout__title')
+        print("company link, name :" + name)
+        #.text.strip()
+        '''
+        company_name.append(name)
+
+
+       # description_test = soup_company_link.find('p',class_='break-words')
+       # if description_test is not None:
+        description = soup_company_link.find('p',class_='break-words').text.strip()
+        company_description.append(description)
+
+
+        website_test = soup_company_link.find('dt', class_='front-sans')
+       # if description_test is not None:
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Website') : 
+                website = soup_company_link.find('a',class_='link-no-visited-state')['href']
+                company_website.append(website)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Industry') : 
+                industries = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_industries.append(industries)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Company size') : 
+                size = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_size.append(size)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Headquarters') : 
+                location = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_location.append(location)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Type') : 
+                type = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_type.append(type)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Founded') : 
+                creation_date = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_creation_date.append(creation_date)
+
+
+        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Specialities') : 
+                specialities = soup_company_link.find('dd',class_='front-sans').text.strip()
+                company_specialities.append(specialities)
+
+        '''
+
+
+
+    
+
 
 #Create dataframa
 
 #spark = SparkSession.builder.appName("linkedin").getOrCreate()
 
 
-liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times]
+liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links]
 
 print("/////////////////////////////////////")
 print(liste[0])
 
-df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times)), 
-                       columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time"]).reset_index(drop=True)
+df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links)), 
+                       columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time","company_link"]).reset_index(drop=True)
                                  
 df_linkedin_scrapping["source"] = "linkedin"
 df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
@@ -182,9 +269,18 @@ df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
 df_linkedin_scrapping.shape
 
 
+liste_company = [company_name,company_description,company_website,company_industries,company_size,company_location,company_type,company_creation_date,company_specialities]
+df_linkedin_company_scrapping = pd.DataFrame(list(zip(company_name,company_description,company_website,company_industries,company_size,company_location,company_type,company_creation_date,company_specialities)),
+                                          columns=["company_name","company_description","company_website","company_industries","company_size","company_location","company_type","company_creation_date","company_specialities"]).reset_index(drop=True)
+df_linkedin_company_scrapping["source"] = "linkedin"
+df_linkedin_company_scrapping['ingest_date'] = pd.Timestamp.now()
+
 print("/////////////////////////////////////")
 #print(type(df_linkedin_scrapping))
 print(df_linkedin_scrapping.head(5))
+
+print(df_linkedin_company_scrapping.head(5))
+
 
 
 from elasticsearch import Elasticsearch
@@ -196,8 +292,12 @@ from elasticsearch import Elasticsearch
 #if not es.indices.exists(index="bigdata-linkedin"):
 #    es.indices.create(index="bigdata-linkedin")
 
+
 #Save raw data
-df_linkedin_scrapping.to_pickle('data/raw/jobs_linkedin_sept.pkl')
+#df_linkedin_scrapping.to_pickle('outputs/raw/jobs_linkedin_nov.pkl')
+
+df_linkedin_company_scrapping.to_pickle('outputs/raw/companies_linkedin_nov.pkl')
+
 ''' 
 #insert_data_elk(df_linkedin_scrapping)
 

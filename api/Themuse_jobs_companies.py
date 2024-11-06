@@ -24,6 +24,7 @@ def transform_list_to_string(column_to_transform):
 
 
 
+
 #tRécupération des infos sur les jobs
 
 url_api_themuse_jobs='https://www.themuse.com/api/public/jobs?'
