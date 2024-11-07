@@ -173,7 +173,7 @@ for job_link in job_links:
 
 
 
-company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_type,company_creation_date,company_specialities = [],[],[],[],[],[],[],[],[],[]
+company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_creation_date,company_specialities = [],[],[],[],[],[],[],[],[]
 
 
 #get more information from company link
@@ -205,10 +205,18 @@ driver.find_element(By.ID, "password").send_keys("ProjetFormationDE#2024")
 # Submit the login form
 driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
+company_links_new = company_links[:5]
 # Wait for login to complete (adjust as necessary)
-time.sleep(15)
+time.sleep(30)
 
-for company_link in company_links:
+#helper before appendibg
+def append_if_exists(data, target_list):
+    if data:  # Checks if data is not None and not empty
+        target_list.append(data)
+
+
+
+for company_link in company_links_new:
         
         #linkedin_company_link = requests.get(company_link)
         ##url_company='https://www.linkedin.com/company/computercore?trk=public_jobs_topcard-org-name'
@@ -234,9 +242,11 @@ for company_link in company_links:
 
         # Navigate to the company page (replace with the URL of the company you want)
         #company_url = company_link['href']
+        
         driver.get(company_link_about)
-        soup_company_link = bs_linkedin(driver.page_source,'html.parser')
+        #soup_company_link = bs_linkedin(driver.page_source,'html.parser')
 
+        #get company info
 
 
         # Wait for the page to load (adjust time as necessary)
@@ -250,6 +260,7 @@ for company_link in company_links:
 
             # Wait for the company name (h1 tag) to be visible
             time.sleep(5)
+            '''
             name = soup_company_link.find('h1',class_='ember-view')['title']
             print(name)
             company_name.append(name)
@@ -257,60 +268,81 @@ for company_link in company_links:
                 #EC.visibility_of_element_located((By.TAG_NAME, 'h1'))
             #)
             
-            
+        
             description = soup_company_link.find('p',class_='break-words')
             if description is not None:
                 company_description.append(description.get_text(strip=True))
                 print(description.text.strip())
 
-            website_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (website_scrap.text.strip() == 'Website') : 
-                website = website_scrap.find('span',class_='link-without-visited-state')
-                if website is not None:
-                    company_website.append(website.get_text(strip=True))
-                    print(website.get_text(strip=True))
+            '''
 
-            industries_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (industries_scrap.text.strip() == 'Industry') : 
-                if soup_company_link.find('dd',class_='mb4') is not None:
-                    industries = industries_scrap.find('dd',class_='mb4').get_text(strip=True)
-                    company_industries.append(industries)
-                    print(industries)
+             #Helper function to check if an element exists and get its text
+            def get_text_if_exists(by, value,attribute = 'text'):
+                    try:
+                        element = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((by, value)))
+                        if attribute == 'text':
+                            return element.text if element else None
+                        else:
+                            return element.get_attribute(attribute)
 
-            size_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (size_scrap.text.strip() == 'Company size') : 
-                if soup_company_link.find('dd',class_='t-black--light') is not None:
-                    size = size_scrap.find('dd',class_='t-black--light').text.strip()
-                    company_size.append(size)
-                    print(size)
-
-            
-            associated_members=soup_company_link.find('dd',class_='t-black--light').find('a',class_='ember-view').find("span")
-            if associated_members is not None:
-                company_associated_members.append(associated_members.text.strip() )
-                print(associated_members)
+                #try:
+                    #element = driver.find_element(by, value)
+                    #return element.text if element else None
+                    except:
+                        return None  # Return None or a default value if the element doesn't exist
                 
+            name = get_text_if_exists(By.TAG_NAME, 'h1',attribute='title')
+            print(name)
+            #company_name.append(name)
+            append_if_exists(name,company_name)
+
+            # Extract the description
+            description = get_text_if_exists(By.CSS_SELECTOR, 'p.break-words')
+            #company_description.append(description)
+            append_if_exists(description,company_description)
+            print(description)
+
+            # Find and extract each piece of information
+            website = get_text_if_exists(By.CSS_SELECTOR, 'a[rel="noopener noreferrer"]')
+            #company_website.append(website)
+            append_if_exists(website,company_website)
+            print(website)
+
+            verified_date = get_text_if_exists(By.XPATH, '//dt[h3[text()="Verified page"]]/following-sibling::dd')
+            print(verified_date)
+
+            industry = get_text_if_exists(By.XPATH, '//dt[h3[text()="Industry"]]/following-sibling::dd')
+            #company_industries.append(industry)
+            append_if_exists(industry,company_industries)
+            print(industry)
+
+            size = get_text_if_exists(By.XPATH, '//dt[h3[text()="Company size"]]/following-sibling::dd')
+            #company_size.append(size)
+            append_if_exists(size,company_size)
+            print(size)
+
+            linkedIn_members = get_text_if_exists(By.XPATH, '//dt[h3[text()="Company size"]]/following-sibling::dd[2]/span')
+            #company_associated_members.append(linkedIn_members)
+            append_if_exists(linkedIn_members,company_associated_members)
+            print(linkedIn_members)
+
+            location = get_text_if_exists(By.XPATH, '//dt[h3[text()="Headquarters"]]/following-sibling::dd')
+            #company_location.append(location)
+            append_if_exists(location,company_location)
+            print(location)
             
-            location_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (location_scrap.text.strip() == 'Headquarters') : 
-                if location_scrap.find('dd',class_='mb4') is not None:
-                    location = location_scrap.find('dd',class_='mb4').text.strip()
-                    company_location.append(location)
-                    print(location)
+            creation_date = get_text_if_exists(By.XPATH, '//dt[h3[text()="Founded"]]/following-sibling::dd')
+            company_creation_date.append(creation_date)
+            append_if_exists(creation_date,company_creation_date)
+            print(creation_date)
 
-            creation_date_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (creation_date_scrap.text.strip() == 'Founded') : 
-                if creation_date_scrap.find('dd',class_='mb4') is not None:
-                    creation_date = creation_date_scrap.find('dd',class_='mb4').text.strip()
-                    company_creation_date.append(creation_date)
-                    print(creation_date)
+            specialties = get_text_if_exists(By.XPATH, '//dt[h3[text()="Specialties"]]/following-sibling::dd')
+            company_specialities.append(specialties)
+            append_if_exists(specialties,company_specialities)
+            print(specialties)
 
-            specialities_scrap = soup_company_link.find('h3',class_='text-heading-medium')
-            if (specialities_scrap.text.strip() == 'Specialities') : 
-                if specialities_scrap.find('dd',class_='mb4') is not None:
-                    specialities = specialities_scrap.find('dd',class_='mb4').text.strip()
-                    company_specialities.append(specialities)
-                    print(specialities)
+            
+
             
             ##name = driver.find_element(By.TAG_NAME, 'h1').text
             ##print(f"Company Name: {name}")
@@ -318,65 +350,9 @@ for company_link in company_links:
             print(f"Error extracting company name: {e}")
 
         # Close the browser window after use
-
-        #get company info
-
-        #name_test = soup_company_link.find('h1',class_='top-card-layout__title')
-        #if name_test is not None:
-        
-        ##print( soup_company_link)
-        ##name = soup_company_link.find('h1',class_='top-card-layout__title')
-        ##print("company link, name :" + name)
-
-        #.text.strip()
-        
-        
-        time.sleep(10)
-
-'''
-       # description_test = soup_company_link.find('p',class_='break-words')
-       # if description_test is not None:
-        description = soup_company_link.find('p',class_='break-words').text.strip()
-        company_description.append(description)
-
-
-        website_test = soup_company_link.find('dt', class_='front-sans')
-       # if description_test is not None:
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Website') : 
-                website = soup_company_link.find('a',class_='link-no-visited-state')['href']
-                company_website.append(website)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Industry') : 
-                industries = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_industries.append(industries)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Company size') : 
-                size = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_size.append(size)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Headquarters') : 
-                location = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_location.append(location)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Type') : 
-                type = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_type.append(type)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Founded') : 
-                creation_date = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_creation_date.append(creation_date)
-
-
-        if (soup_company_link.find('dt',class_='front-sans').text.strip() == 'Specialities') : 
-                specialities = soup_company_link.find('dd',class_='front-sans').text.strip()
-                company_specialities.append(specialities)
-
-        '''
+ 
+        finally: #allow time to see the data in the console
+            time.sleep(15)
 
 
 
@@ -405,9 +381,9 @@ df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
 df_linkedin_scrapping.shape
 
 
-liste_company = [company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_type,company_creation_date,company_specialities]
-df_linkedin_company_scrapping = pd.DataFrame(list(zip(company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_type,company_creation_date,company_specialities)),
-                                          columns=["company_name","company_description","company_website","company_industries","company_size","company_associated_members","company_location","company_type","company_creation_date","company_specialities"]).reset_index(drop=True)
+liste_company = [company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_creation_date,company_specialities]
+df_linkedin_company_scrapping = pd.DataFrame(list(zip(company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_creation_date,company_specialities)),
+                                          columns=["company_name","company_description","company_website","company_industries","company_size","company_associated_members","company_location","company_creation_date","company_specialities"]).reset_index(drop=True)
 df_linkedin_company_scrapping["source"] = "linkedin"
 df_linkedin_company_scrapping['ingest_date'] = pd.Timestamp.now()
 
@@ -415,6 +391,8 @@ print("/////////////////////////////////////")
 #print(type(df_linkedin_scrapping))
 print(df_linkedin_scrapping.head(5))
 
+print("/////////////////////////////////////")
+df_linkedin_company_scrapping.shape
 print(df_linkedin_company_scrapping.head(5))
 
 
