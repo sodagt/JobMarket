@@ -43,7 +43,7 @@ def extract_values(column_to_extract, value):
     return values_to_extract
 
 #Fonction qui traduit un texte du francaias à l'angalis 
-def translate_french_to_english(text):
+def translate_to_english(text):
     if pd.notna(text) and isinstance(text, str) and len(text.strip()) > 1:  # Vérifiez si le texte est significatif
         try:
             lang = detect(text)  
@@ -51,6 +51,10 @@ def translate_french_to_english(text):
                 translator = GoogleTranslator(source='fr', target='en')
                 translation = translator.translate(text)
                 return translation
+            elif lang == 'de':  # Allemand
+                translator = GoogleTranslator(source='de', target='en')
+                translation = translator.translate(text)
+                return translation.text
             else:
                 return text  
         except Exception as e:
@@ -71,3 +75,26 @@ def clean_text(text):
         text = re.sub(r'\s+', ' ', text)
         return text
     return ""
+
+
+def extract_salary_info(salary_text):
+    # Recherche de la devise
+    currency_match = re.search(r'Salary:([^\d\s:]+)', salary_text)
+    currency = currency_match.group(1) if currency_match else None
+    salary_range = re.findall(r'[\d.,]+K?', salary_text)
+    
+    # Convertir les valeurs en nombres en remplacant les K et s'il y a month multiplier par 12
+    min_salary = max_salary = 0
+    if len(salary_range) > 0:
+        min_salary = float(salary_range[0].replace('K', '').replace(',', '')) 
+        if 'K' in salary_range[0]:
+            min_salary=min_salary*1000 
+        if 'month' in salary_range[0]:
+            min_salary=min_salary*12 
+    if len(salary_range) > 1:
+        max_salary = float(salary_range[1].replace('K', '').replace(',', ''))
+        if 'K' in salary_range[1]:
+            max_salary=max_salary*1000 
+        if 'month' in salary_range[1]:
+            max_salary=max_salary*12 
+    return pd.Series([currency, min_salary, max_salary])

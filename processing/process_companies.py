@@ -6,7 +6,7 @@ import pickle
 import pandas as pd
 from tqdm import tqdm
 tqdm.pandas()  # Initialiser tqdm pour pandas
-from common.utils import translate_french_to_english
+from common.utils import translate_to_english
 from common.utils import clean_text
 #import re
 #from langdetect import detect
@@ -75,7 +75,7 @@ print(f"Taille du dataframe fusionné : {shape}")
 
 #traduction des textes en Francais 
 companies['contents'] = companies['description'].apply(clean_text)
-companies['contents'] = companies['contents'].progress_apply(translate_french_to_english)
+companies['contents'] = companies['contents'].progress_apply(translate_to_english)
 
 #save the result
 
