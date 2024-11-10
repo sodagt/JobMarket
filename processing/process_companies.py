@@ -1,12 +1,19 @@
-
 #export PYTHONPATH=$(pwd)
 
 #import packages
+import sys
+sys.path.append('../')
+import os
+#os.chdir('/Users/sodagayethiam/Documents/Formations/Parcours_data_engineer/projet_jobmarket/JobMarket/processing')
+
 import pickle
 import pandas as pd
 from tqdm import tqdm
 tqdm.pandas()  # Initialiser tqdm pour pandas
-from common.utils import translate_french_to_english
+
+import sys
+sys.path.append('../')
+from common.utils import translate_to_english
 from common.utils import clean_text
 #import re
 #from langdetect import detect
@@ -17,12 +24,12 @@ from common.utils import clean_text
 pd.set_option('display.max_colwidth', None)
 
 #chargement du df des compagnies welcome to the jungle
-companies_wttj = pd.read_pickle('../data/raw/companies_wttj_aout.pkl')
-companies_themuse = pd.read_pickle('../data/raw/companies_muse_sept.pkl')
+companies_wttj = pd.read_pickle('../outputs/raw/companies_wttj_aout.pkl')
+companies_themuse = pd.read_pickle('../outputs/raw/companies_muse_sept.pkl')
+companies_linkedin= pd.read_pickle('../outputs/raw/companies_linkedin_nov.pkl')
 
 
-
-#traitement des noms de compagnies manquantes da
+#traitement des noms de compagnies manquantes de wttj
 companies_wttj['name_company2']=companies_wttj['url_company'].str.extract(r'companies/([a-zA-Z0-9-]+)')
 companies_wttj.loc[companies_wttj['name_company'].isnull(), 'name_company'] =companies_wttj['name_company2']
 companies_wttj.drop('name_company2', axis=1, inplace=True)
@@ -67,19 +74,41 @@ wttj_selected['publication_date'] = None
 wttj_selected['size']='not available'
 wttj_selected['logo']='not available'
 
+
+linkedin_selected = companies_linkedin[['company_name','company_description','company_website','company_industries',
+'company_size', 'company_location','company_creation_date' ,'source']].rename(columns={'company_name': 'name_company', 'company_description': 'description',
+'company_size': 'size','company_industries': 'industries','company_creation_date': 'creation_date','company_location':'locations'})
+
+linkedin_selected['twitter_link']='not available'
+linkedin_selected['linkedin_link']='not available'
+linkedin_selected['facebook_link']='not available'
+linkedin_selected['instagram_link']='not available'
+linkedin_selected['nb_employee']=None
+linkedin_selected['parity_women']='not available'
+linkedin_selected['parity_men']='not available'
+linkedin_selected['avg_age_employees']='not available'
+linkedin_selected['ca']='not available'
+
+
 companies = pd.concat([themuse_selected, wttj_selected], axis=0)
 shape=companies.shape
-print(f"Taille du dataframe fusionné : {shape}")
+print(f"Taille du dataframe fusionné 1 : {shape}")
+
+companies = pd.concat([companies, linkedin_selected], axis=0)
+companies=companies.drop_duplicates()
+
+shape=companies.shape
+print(f"Taille du dataframe fusionné 2 : {shape}")
 
 
 
 #traduction des textes en Francais 
 companies['contents'] = companies['description'].apply(clean_text)
-companies['contents'] = companies['contents'].progress_apply(translate_french_to_english)
+companies['contents'] = companies['contents'].progress_apply(translate_to_english)
 
 #save the result
 
-companies.to_pickle('./data/final/companies.pkl')
+companies.to_pickle('../outputs/final/companies.pkl')
 
 #companies_wttj['creation_date'] = companies_wttj['creation_date'].astype(int)
 #companies_wttj['nb_employee'] = companies_wttj['nb_employee'].astype(int)
