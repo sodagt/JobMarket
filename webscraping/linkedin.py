@@ -6,6 +6,7 @@ Cette classe nous permet de webscrapper les données du site LinkedIn.
 #import sys
 #sys.path.append('../')
 import os
+import time
 
 import pandas as pd
 import pickle
@@ -26,33 +27,45 @@ url_linkedin_salary_range = 'https://www.linkedin.com/jobs/search?keywords=&loca
 
 url_linkedin_product_manager = 'https://www.linkedin.com/jobs/search?keywords=product%20manager&location=%C3%89tats-Unis&geoId=&trk=public_jobs_jobs-search-bar_search-submit&position='
 
-
+"""
 job_titles,job_companies,job_locations,job_links, jobs_posted_times, company_links  = [],[],[],[],[],[]
 
-max_page_number = 1
+max_page_number = 150
 
 
 #get macro information from main page
 
 def linkedin_scraper(webpage, page_number):
-    next_page = webpage + str(page_number)
+    #next_page = webpage + str(page_number)
     #print(str(next_page))
-    response = requests.get(str(next_page))
+    #response = requests.get(str(next_page))
     #soup = bs_linkedin(response.content,'html.parser')
     #jobs = soup.find_all('div', class_='base-card relative w-full hover:no-underline focus:no-underline base-card--link base-search-card base-search-card--link job-search-card')
         
-    if page_number < max_page_number:
+    print("page_number")
+
+    for page_number in range (0,max_page_number):
         page_number = page_number + 1
-        linkedin_scraper(webpage, page_number)
+
+        print(page_number)
+
+        next_page = webpage + str(page_number)
+        #print("current_page")
+        #print(str(next_page))
+        response = requests.get(str(next_page))
+        #linkedin_scraper(webpage, page_number)
         #print(response)
-        #print(page_number)
+        
         soup_linkedin = bs_linkedin(response.content,'lxml')
         jobs_linkedin = soup_linkedin.find_all('div', class_='base-card relative w-full hover:no-underline focus:no-underline base-card--link base-search-card base-search-card--link job-search-card')
         #print(jobs_linkedin)
 
+
         for job in jobs_linkedin:
             job_title = job.find('h3', class_='base-search-card__title').text.strip()
             job_titles.append(job_title)
+            #print("job_title")
+            #print(job_title)
 
             job_company = job.find('h4', class_='base-search-card__subtitle').text.strip()
             job_companies.append(job_company)
@@ -79,8 +92,12 @@ def linkedin_scraper(webpage, page_number):
             #print(job_company)
 
 
-for position in range(1,6):
-    #print(position)
+print("SLEEP BEFORE POSITION linkedin_scraper")
+time.sleep(3)
+
+print("START POSITION linkedin_scraper")
+for position in range(10,15):
+    print("***************** POSITION "+str(position))
     linkedin_scraper(url_linkedin+str(position)+'&pageNum=', 0)
 
 
@@ -91,6 +108,8 @@ print(job_links[10])
 print(jobs_posted_times[27])
 
 
+time.sleep(10)
+print("STARTING JOB LINK")
 
 
 #exploring job link
@@ -112,6 +131,7 @@ for job_link in job_links:
         salary_info_block = soup_jobs_link.find('span',class_='main-job-card__salary-info block my-0.5 mx-0')
         salary_compensation = soup_jobs_link.find('div',class_='salary compensation__salary')
         salary_card_info = soup_jobs_link.find('span',class_='aside-job-card__salary-info')
+
         
         #get company link
         company_link =  soup_jobs_link.find('a', class_='topcard__org-name-link')
@@ -146,6 +166,7 @@ for job_link in job_links:
         salaries_max.append(salary_max)
 
         #get job criteria
+
                 
         job_criteria = soup_jobs_link.find_all('li',class_='description__job-criteria-item')
 
@@ -153,7 +174,6 @@ for job_link in job_links:
 
             if (criteria.find('h3').text.strip() == 'Seniority level') : 
                 seniority_level = criteria.find_next('span',class_='description__job-criteria-text description__job-criteria-text--criteria').text.strip().replace('\n','')
-                #print(seniority_level)
                 seniority_levels.append(seniority_level)
 
             if (criteria.find('h3').text.strip() == 'Employment type') : 
@@ -173,13 +193,88 @@ for job_link in job_links:
 
 
 
+time.sleep(10)
+print("STARTING JOB DF")
+
+
+liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links]
+
+print("/////////////////////////////////////")
+print(liste[0])
+
+df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links)), 
+                       columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time","company_link"]).reset_index(drop=True)
+                                 
+df_linkedin_scrapping["source"] = "linkedin"
+df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
+
+
+
+df_linkedin_scrapping.shape
+
+print("/////////////////////////////////////")
+#print(type(df_linkedin_scrapping))
+print(df_linkedin_scrapping.head(5))
+
+#Save raw data
+df_linkedin_scrapping.to_pickle('outputs/raw/jobs_linkedin_nov_15.pkl')
+
+print("///////////////////////////////////// END PIKCLING JOBS")
+
+#pickle company_links list to get it after for company's DF 
+distinct_company_links = list(set(company_links))
+company_links_df = pd.DataFrame(distinct_company_links)
+company_links_df.to_pickle("outputs/raw/company_links_nov_15.pkl")
+
+#with open("outputs/raw/company_links.pkl","wb") as file:
+#    pickle.dump(distinct_company_links,file)
+
+print("///////////////////////////////////// END PIKCLING COMPANIES LINKS")
+
+"""
+
+
+
+
+
+
+#"""
+
+print("///////////////////////////////////// START COMPANY LINK")
+
 company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_creation_date,company_specialities = [],[],[],[],[],[],[],[],[]
+
+
+
+#pickle list to get companies links 
+#with open("outputs/raw/company_links.pkl","rb") as file:
+#    company_links_pkl = pickle.load(file)
+
+#company_links_distinct = list(set(company_links))
+#company_links_distinct = company_links_pkl 
+
+company_links_distinct_df = pd.read_pickle("outputs/raw/company_links_nov_15.pkl") 
+#company_links_distinct=company_links_distinct_df.values.tolist()
+company_links_distinct=company_links_distinct_df[company_links_distinct_df.columns[0]].tolist()
+
+
+
+print(type(company_links_distinct))
+
+print(company_links_distinct[0])
+print(company_links_distinct[4].split('?')[0]+ '/about/')
+
+
+
+
+#helper before appendibg
+def append_if_exists(data, target_list):
+    if data:  # Checks if data is not None and not empty
+        target_list.append(data)
 
 
 #get more information from company link
 
-import time
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -205,34 +300,18 @@ driver.find_element(By.ID, "password").send_keys("ProjetFormationDE#2024")
 # Submit the login form
 driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
-company_links_new = company_links[:5]
 # Wait for login to complete (adjust as necessary)
-time.sleep(30)
+print("SLEEP BEFORE COMPANY LINK")
+time.sleep(5)
 
-#helper before appendibg
-def append_if_exists(data, target_list):
-    if data:  # Checks if data is not None and not empty
-        target_list.append(data)
-
-
-
-for company_link in company_links_new:
+for company_link in company_links_distinct:
         
-        #linkedin_company_link = requests.get(company_link)
-        ##url_company='https://www.linkedin.com/company/computercore?trk=public_jobs_topcard-org-name'
-        ##linkedin_company_link = requests.get(url_company)
-        ##soup_company_link = bs_linkedin(linkedin_company_link.content,"lxml")
-        #company_name, company_website, description, publication_date, creation_date, nb_employee, size
-        #logo, location, industries, parity_women parity_men, avg_age_employees, ca, source, insta/face
 
-        ##linkedin_company_link = requests.get(company_link['href'])
-        ##soup_company_link = bs_linkedin(linkedin_company_link.content,"lxml")
         print("/////// Linkedin Companies LInks /////// ")
-        ##print( soup_company_link)
-        #name = soup_company_link.find('h1',class_='top-card-layout__title')
-        #print("company link, name :" + name)
 
-        print(company_link)
+
+        #print(company_link)
+
         #parts = company_link.split('?')
         #print(parts)
         #company_link_about = ''.join(parts[0]) + '/about/'
@@ -240,43 +319,26 @@ for company_link in company_links_new:
 
         print(company_link_about)
 
-        # Navigate to the company page (replace with the URL of the company you want)
-        #company_url = company_link['href']
-        
+        # Navigate to the company page (replace with the URL of the company you want)        
         driver.get(company_link_about)
-        #soup_company_link = bs_linkedin(driver.page_source,'html.parser')
+
 
         #get company info
 
-
         # Wait for the page to load (adjust time as necessary)
-        time.sleep(5)
+        time.sleep(7)
 
         # Extract the company name (this may need to be adjusted depending on the page structure)
         try:
-            print(driver.current_url)
+            #print(driver.current_url)
             from selenium.webdriver.support.ui import WebDriverWait
             from selenium.webdriver.support import expected_conditions as EC
 
-            # Wait for the company name (h1 tag) to be visible
-            time.sleep(5)
-            '''
-            name = soup_company_link.find('h1',class_='ember-view')['title']
-            print(name)
-            company_name.append(name)
-             #WebDriverWait(driver, 10).until(
-                #EC.visibility_of_element_located((By.TAG_NAME, 'h1'))
-            #)
-            
-        
-            description = soup_company_link.find('p',class_='break-words')
-            if description is not None:
-                company_description.append(description.get_text(strip=True))
-                print(description.text.strip())
+            # Wait for the company page to be visible
+            #time.sleep(5)
+           
 
-            '''
-
-             #Helper function to check if an element exists and get its text
+            #Helper function to check if an element exists and get its text
             def get_text_if_exists(by, value,attribute = 'text'):
                     try:
                         element = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((by, value)))
@@ -292,7 +354,8 @@ for company_link in company_links_new:
                         return None  # Return None or a default value if the element doesn't exist
                 
             name = get_text_if_exists(By.TAG_NAME, 'h1',attribute='title')
-            print(name)
+            #print("company_name")
+            #print(name)
             #company_name.append(name)
             append_if_exists(name,company_name)
 
@@ -300,85 +363,60 @@ for company_link in company_links_new:
             description = get_text_if_exists(By.CSS_SELECTOR, 'p.break-words')
             #company_description.append(description)
             append_if_exists(description,company_description)
-            print(description)
+            #print(description)
 
             # Find and extract each piece of information
             website = get_text_if_exists(By.CSS_SELECTOR, 'a[rel="noopener noreferrer"]')
             #company_website.append(website)
             append_if_exists(website,company_website)
-            print(website)
+            #print(website)
 
             verified_date = get_text_if_exists(By.XPATH, '//dt[h3[text()="Verified page"]]/following-sibling::dd')
-            print(verified_date)
+            #print(verified_date)
 
             industry = get_text_if_exists(By.XPATH, '//dt[h3[text()="Industry"]]/following-sibling::dd')
             #company_industries.append(industry)
             append_if_exists(industry,company_industries)
-            print(industry)
+            #print(industry)
 
             size = get_text_if_exists(By.XPATH, '//dt[h3[text()="Company size"]]/following-sibling::dd')
             #company_size.append(size)
             append_if_exists(size,company_size)
-            print(size)
+            #print(size)
 
             linkedIn_members = get_text_if_exists(By.XPATH, '//dt[h3[text()="Company size"]]/following-sibling::dd[2]/span')
             #company_associated_members.append(linkedIn_members)
             append_if_exists(linkedIn_members,company_associated_members)
-            print(linkedIn_members)
+            #print(linkedIn_members)
 
             location = get_text_if_exists(By.XPATH, '//dt[h3[text()="Headquarters"]]/following-sibling::dd')
             #company_location.append(location)
             append_if_exists(location,company_location)
-            print(location)
+            #print(location)
             
             creation_date = get_text_if_exists(By.XPATH, '//dt[h3[text()="Founded"]]/following-sibling::dd')
             company_creation_date.append(creation_date)
             append_if_exists(creation_date,company_creation_date)
-            print(creation_date)
+            #print(creation_date)
 
             specialties = get_text_if_exists(By.XPATH, '//dt[h3[text()="Specialties"]]/following-sibling::dd')
             company_specialities.append(specialties)
             append_if_exists(specialties,company_specialities)
-            print(specialties)
+            #print(specialties)
 
-            
-
-            
-            ##name = driver.find_element(By.TAG_NAME, 'h1').text
-            ##print(f"Company Name: {name}")
+        
         except Exception as e:
             print(f"Error extracting company name: {e}")
 
-        # Close the browser window after use
  
         finally: #allow time to see the data in the console
-            time.sleep(15)
+            time.sleep(3)
 
 
 
+# Close the browser window after use
 driver.quit()
     
-
-
-#Create dataframa
-
-#spark = SparkSession.builder.appName("linkedin").getOrCreate()
-
-
-liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links]
-
-print("/////////////////////////////////////")
-print(liste[0])
-
-df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links)), 
-                       columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time","company_link"]).reset_index(drop=True)
-                                 
-df_linkedin_scrapping["source"] = "linkedin"
-df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
-
-
-
-df_linkedin_scrapping.shape
 
 
 liste_company = [company_name,company_description,company_website,company_industries,company_size,company_associated_members,company_location,company_creation_date,company_specialities]
@@ -387,17 +425,22 @@ df_linkedin_company_scrapping = pd.DataFrame(list(zip(company_name,company_descr
 df_linkedin_company_scrapping["source"] = "linkedin"
 df_linkedin_company_scrapping['ingest_date'] = pd.Timestamp.now()
 
-print("/////////////////////////////////////")
-#print(type(df_linkedin_scrapping))
-print(df_linkedin_scrapping.head(5))
 
 print("/////////////////////////////////////")
 df_linkedin_company_scrapping.shape
 print(df_linkedin_company_scrapping.head(5))
 
+#Save raw data
+df_linkedin_company_scrapping.to_pickle('outputs/raw/companies_linkedin_nov_15.pkl')
+
+#"""
 
 
-from elasticsearch import Elasticsearch
+
+
+
+
+#from elasticsearch import Elasticsearch
 
 
 #Write df in ElasticSearch
@@ -407,10 +450,6 @@ from elasticsearch import Elasticsearch
 #    es.indices.create(index="bigdata-linkedin")
 
 
-#Save raw data
-#df_linkedin_scrapping.to_pickle('outputs/raw/jobs_linkedin_nov.pkl')
-
-df_linkedin_company_scrapping.to_pickle('outputs/raw/companies_linkedin_nov.pkl')
 
 ''' 
 #insert_data_elk(df_linkedin_scrapping)
