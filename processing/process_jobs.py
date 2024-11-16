@@ -255,7 +255,7 @@ jobs_final.to_pickle('../outputs/final/jobs.pkl')
 # In[20]:
 
 
-companies_linkedin.head()
+#companies_linkedin.head()
 
 
 # In[21]:
