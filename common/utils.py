@@ -2,7 +2,7 @@
 Toutes les fonctions utilisées dans le projet sont définies dans ce fichier (read, write, get,..)
 """
 import pandas as pd
-
+import time
 import sys
 sys.path.append('../')
 
@@ -16,6 +16,8 @@ import re
 from langdetect import detect
 from deep_translator import GoogleTranslator
 
+from geopy.geocoders import Nominatim
+import pycountry
 
 #Write DF in Elasticsearch
 def generate_data_to_elk(df: pd.DataFrame):
@@ -98,3 +100,41 @@ def extract_salary_info(salary_text):
         if 'month' in salary_range[1]:
             max_salary=max_salary*12 
     return pd.Series([currency, min_salary, max_salary])
+
+
+#fonction qui récupère le pays, la monnaie, la ville, le code postal et les coordonnées géographiques  
+def get_infos_location(locations):
+    try:
+        geolocator = Nominatim(user_agent="my_geolocation_app_v1.0", timeout=5)
+        time.sleep(1)  # délai entre les requêtes
+        location = geolocator.geocode(locations)
+        if not location:
+            return pd.Series(['Not found']* 7 )
+        
+        latitude = str(location.latitude)
+        longitude = str(location.longitude)
+        
+        # Reverse géocodage
+        location_reverse = geolocator.reverse(f"{latitude},{longitude}")
+        address = location_reverse.raw['address']
+        
+        # Extraire les informations
+        country = address.get('country', 'Unknown')
+        city = address.get('city', 'Unknown')
+        state = address.get('state', 'Unknown')
+        postcode = address.get('postcode', 'Unknown')
+        
+        country_inf = pycountry.countries.get(name=country)
+        if country_inf:
+            currency = pycountry.currencies.get(numeric=country_inf.numeric)
+            currency_name = currency.name if currency else 'Unknown'
+        else:
+            currency_name = 'Unknown'
+        
+        return pd.Series([country, state, city, postcode, latitude, longitude, currency_name])
+    
+    except Exception as e:
+        # gestion deserreurs 
+        print(f"Error for location '{locations}': {e}")
+        return pd.Series(['Not found'] * 7)
+                         
