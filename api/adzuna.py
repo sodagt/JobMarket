@@ -34,7 +34,7 @@ url_adzuna_gb = "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=5af6dd44&
 
 
 #countries = ['au','be','br','ca','ch','de','es','fr','gb','in','it','mx','nl','nz','pl','sg','us','za']
-countries = ['fr','gb','in','it','mx','nl','nz','pl','sg','us','za']
+countries = ['in','it','mx','nl','nz','pl','sg','us','za']
 
 #countries = ['au','be']
 #us as united states, gb as great britain, at as autralia
@@ -78,20 +78,32 @@ for country in countries:
     print(country)
 
     error_page = 0
+    error_type = 200
 
-    for page in range(1,1200):
+    for page in range(1,100):
         print(page)
         time.sleep(2)
 
         #new_url = "https://api.adzuna.com/v1/api/jobs/us/search/"+str(i)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff"
         #first key id
-        url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=100"
+        #url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=100"
                 
         #second key id
-        #url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=203b447b&app_key=d5b8b476bf953c4fefe2d21abf95bd92&results_per_page=100"
+        url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=203b447b&app_key=d5b8b476bf953c4fefe2d21abf95bd92&results_per_page=100"
 
         #print(url)
         page_adzuna_new = requests.get(url)
+
+        """params "created": "2024-05-14T16:53:36Z"
+        day: 2024-05-14
+        params = {
+            "created_date": day  # Replace 'created_date' with the actual parameter name
+        }
+
+        # Send the GET request
+        response = requests.get(api_url, params=params)
+        """
+
         if page_adzuna_new.status_code == 200:
             try:
                 new_data = page_adzuna_new.json()
@@ -106,6 +118,8 @@ for country in countries:
             print(f"Error: {page_adzuna_new.status_code}, Response: {page_adzuna_new.text}")
             error_page +=1
 
+            error_type = page_adzuna_new.status_code
+
             if (error_page == 30): 
                 print("Switching Country")
                 countries_iter = iter(countries)         # Convert list to iterator
@@ -114,6 +128,10 @@ for country in countries:
                 error_page = 0
                 df = pd.DataFrame()
                 break
+            
+            if error_type == 429: sys.exit()
+
+            
 
 
     df.to_pickle('outputs/raw/jobs_adzuna_'+country+'_nov.pkl')
