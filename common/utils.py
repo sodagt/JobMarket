@@ -5,9 +5,9 @@ import pandas as pd
 import time
 import sys
 sys.path.append('../')
-
+import time
 #from pyspark.sql import DataFrame
-
+import pickle
 
 from configs.conf import es
 from elasticsearch.helpers import bulk
@@ -103,38 +103,75 @@ def extract_salary_info(salary_text):
 
 
 #fonction qui récupère le pays, la monnaie, la ville, le code postal et les coordonnées géographiques  
-def get_infos_location(locations):
+#location_cache = {} #initialisation cache location
+# Charger le cache
+def load_location_cache(cache_path):
+    global location_cache
     try:
-        geolocator = Nominatim(user_agent="my_geolocation_app_v1.0", timeout=5)
-        time.sleep(1)  # délai entre les requêtes
-        location = geolocator.geocode(locations)
-        if not location:
-            return pd.Series(['Not found']* 7 )
+        with open(cache_path, 'rb') as f:
+            location_cache = pickle.load(f)
+            print("Cache chargé.")
+    except FileNotFoundError:
+        #location_cache = {}
+        print("Aucun cache trouvé. Création d'un nouveau.")
+
+
+#cache_path = '../outputs/intermediate/location_cache.pkl'
+
+# Sauvegarder le cache
+def save_location_cache(cache_path):
+    global location_cache
+    with open(cache_path, 'wb') as f:
+        pickle.dump(location_cache, f)
+        print ('cache sauvegardé')
+
+
+def get_infos_location(location_name):
+    # Vérifier si l'élément est déjà dans le cache
+    if location_name in location_cache:
+        return pd.Series(location_cache[location_name])
+    
+    try:
+        geolocator = Nominatim(user_agent="my_geolocation_app_v1.0", timeout=5)  # Initialisation
+        time.sleep(2)  # Délai entre les requêtes pour éviter de surcharger l'API
         
-        latitude = str(location.latitude)
-        longitude = str(location.longitude)
+        # Géocodage de la localisation
+        location_obj = geolocator.geocode(location_name)
+        if not location_obj:
+            return pd.Series(['Not found'] * 7)
         
-        # Reverse géocodage
+        # Extraction des coordonnées
+        latitude = str(location_obj.latitude)
+        longitude = str(location_obj.longitude)
+        
+        # Reverse géocodage pour obtenir les détails de l'adresse
         location_reverse = geolocator.reverse(f"{latitude},{longitude}")
-        address = location_reverse.raw['address']
+        address = location_reverse.raw.get('address', {})
         
-        # Extraire les informations
+        # Extraction des informations d'adresse
         country = address.get('country', 'Unknown')
-        city = address.get('city', 'Unknown')
+        city = address.get('city', address.get('town', 'Unknown'))
         state = address.get('state', 'Unknown')
         postcode = address.get('postcode', 'Unknown')
         
-        country_inf = pycountry.countries.get(name=country)
-        if country_inf:
-            currency = pycountry.currencies.get(numeric=country_inf.numeric)
+        # Obtention des informations sur la devise
+        country_info = pycountry.countries.get(name=country)
+        if country_info:
+            currency = pycountry.currencies.get(numeric=country_info.numeric)
             currency_name = currency.name if currency else 'Unknown'
         else:
             currency_name = 'Unknown'
         
-        return pd.Series([country, state, city, postcode, latitude, longitude, currency_name])
+        # Création du résultat à renvoyer sous forme de liste
+        result = [country, state, city, postcode, latitude, longitude, currency_name]
+        
+        # Mise à jour du cache avec les informations
+        location_cache[location_name] = result
+        
+        return pd.Series(result)
     
     except Exception as e:
-        # gestion deserreurs 
-        print(f"Error for location '{locations}': {e}")
+        # Gestion des erreurs générales
+        print(f"Error for location '{location_name}': {e}")
+        location_cache[location_name] = ['Not found'] * 7  # Mise à jour du cache avec un résultat d'erreur
         return pd.Series(['Not found'] * 7)
-                         
