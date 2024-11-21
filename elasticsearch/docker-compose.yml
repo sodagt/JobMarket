@@ -1,7 +1,7 @@
 version: "2.2"
 
 services:
-  setup:
+  api:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
@@ -64,7 +64,7 @@ services:
 
   es01:
     depends_on:
-      setup:
+      api:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
