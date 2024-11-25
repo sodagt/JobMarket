@@ -152,8 +152,8 @@ def jobs_country(jobIndustry: str):
 
 
 
-#if __name__ == "__main__":
-#    uvicorn.run(app, host="127.0.0.1", port=2222)
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=2222)
 
 #uvicorn main:app --reload --port 2222
 
