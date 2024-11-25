@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 #export PYTHONPATH=$(pwd)
 print ('Step 1/8: import packages')
 #import packages
@@ -132,6 +135,8 @@ print ('Step 7/8: Get informatins from locations' )
 #Get location informations
 load_location_cache(cache_path)
 companies [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'currency_name','country_code','codeIso_lvl4' ]]= companies['locations'].progress_apply(get_infos_location)
+companies['latitude'] = companies['latitude'].replace('Not found', '0').astype(float)
+companies['longitude'] = companies['longitude'].replace('Not found', '0').astype(float)
 
 
 print ('Step 8/8: Manage duplicated companies')
@@ -150,21 +155,21 @@ companies.loc[companies['currency_name'] == 'Unknown', 'currency_name'] = compan
 companies.loc[:, 'clef_doublons'] = companies['name_company'].astype(str) + ' ' + companies['industries'].astype(str) + ' ' + companies['locations'].astype(str)
 
 
-def max_length_string(series):
+"""def max_length_string(series):
     series = series.dropna()
     if series.empty:
         return 'Not Available' 
     return series.loc[series.str.len().idxmax()] # Find which element has the nmax numbers of character
-
+"""
 
 aggregation_rules = {col: 'first' for col in companies.columns}
 aggregation_rules.update({
-    'twitter_link': max_length_string,  
-    'company_website': max_length_string,  
-    'logo': max_length_string,  
-    'linkedin_link': max_length_string,  
-    'facebook_link': max_length_string,  
-    'instagram_link': max_length_string,  
+    'twitter_link': 'max',  
+    'company_website': 'max',  
+    'logo': 'max',  
+    'linkedin_link': 'max',  
+    'facebook_link': 'max',  
+    'instagram_link': 'max',  
     #'locations': lambda x: ', '.join(x.dropna().unique()),  # Concatène les valeurs uniques
     'publication_date': 'min',    
     'creation_date': 'min',                               # Prend la date la plus ancienne
@@ -178,9 +183,50 @@ companies = companies.drop('clef_doublons', axis=1)
 
 companies.shape
 
-print ('Save the companies on /outputs/final/companies.pk')
+#Add infos about cities and countries
+print ('Add infos about cities and countries')
+
+town_data=pd.read_pickle('../outputs/intermediate/town_data.pkl')
+
+indicator_avg_by_country = town_data.groupby('country_code')[[
+    'Quality_of_Life_Index', 'Purchasing_Power_Index', 'Safety_Index', 'Health_Care_Index',
+    'Cost_of_Living_Index', 'Rent_Index', 'Groceries_Index', 'Crime_Index', 
+    'Climate_Index', 'Pollution_Index', 'Traffic_Index', 'Affordability_Index'
+]].mean()
+
+#merge companies with informations about cities
+companies = pd.merge(companies,  town_data[['Quality_of_Life_Index', 'Purchasing_Power_Index',
+       'Safety_Index', 'Health_Care_Index', 'Cost_of_Living_Index',
+       'Rent_Index', 'Groceries_Index', 'Crime_Index', 'Climate_Index',
+       'Pollution_Index', 'Traffic_Index', 'Affordability_Index',
+       'city']], on='city', how='left')
+
+
+city_country = pd.merge(town_data, indicator_avg_by_country, on='country_code', how='left', suffixes=('', '_country_avg'))
+
+
+#merge jobs with informations about countries
+companies = pd.merge(companies, indicator_avg_by_country, on='country_code', how='left', suffixes=('', '_country_avg'))
+
+
+#replace the nan values for cities with values of the countries  
+index_life_col = ['Quality_of_Life_Index', 'Purchasing_Power_Index', 'Safety_Index', 'Health_Care_Index', 'Cost_of_Living_Index',
+       'Rent_Index', 'Groceries_Index', 'Crime_Index', 'Climate_Index', 'Pollution_Index', 'Traffic_Index', 'Affordability_Index']
+
+for column in index_life_col:
+    companies[column] = companies[column].fillna(companies[f'{column}_country_avg'])
+
+# delete avg indicators by country in final dataframe
+companies.drop(columns=[f'{column}_country_avg' for column in index_life_col], inplace=True)
+
+#replace the last NA values by the mean
+companies[index_life_col] = companies[index_life_col].fillna(companies[index_life_col].mean())
+
+
+print ('Save the companies on /outputs/final/companies.pkl')
 #save the result
 companies.to_pickle('../outputs/final/companies.pkl')
+
 
 #companies_wttj['creation_date'] = companies_wttj['creation_date'].astype(int)
 #companies_wttj['nb_employee'] = companies_wttj['nb_employee'].astype(int)

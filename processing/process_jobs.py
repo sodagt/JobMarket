@@ -159,7 +159,7 @@ jobs_theMuse_selected [['country', 'state', 'city', 'postcode', 'latitude', 'lon
 jobs_wttj_selected = jobs_wttj[['title', 'company', 'type_contract', 'contents', 'date_public',
        'employmentType','addressCountry', 'addressLocality',  'industry', 'link_job', 'salary', 'postalCode', 'streetAddress']].rename(
 columns={'title': 'job_title', 'contents': 'job_description',
-'employmentType': 'contract_type','company': 'company_name','date_public': 'publication_datetime','addressLocality': 'location',
+'employmentType': 'contract_type','company': 'company_name','date_public': 'publication_datetime','addressLocality': 'location','type_contract':'contract_type',
 ' addressCountry': 'country_wttj','link_job': 'offer_link','streetAddress': 'streetAdress_wttj','postalCode': 'postalCode_wttj'})
 
 
@@ -204,7 +204,7 @@ jobs_linkedin_selected = jobs_linkedin[['title','employment_type', 'company','sa
 'company': 'company_name','posted_time': 'publication_datetime','job_industry': 'industry','link': 'offer_link','seniority_level':'levels','job_function':'category'})
 
 #jobs_linkedin_selected['publication_date'] = pd.to_datetime(jobs_adzuna_selected['publication_datetime']).dt.strftime("%Y-%m-%d")
-jobs_linkedin_selected['contents']='not available'
+jobs_linkedin_selected['job_description']='not available'
 #jobs_linkedin_selected['currency']='dollars'
 jobs_linkedin_selected['publication_time'] =None
 
@@ -241,6 +241,7 @@ jobs_final=jobs_final.drop_duplicates()
 shape=jobs_final.shape
 print(f"Taille du dataframe fusionné : {shape}")
 #Taille du dataframe fusionné : (16269, 21)
+jobs_final.to_pickle('../outputs/final/jobs.pkl')
 
 
 # In[84]:
@@ -252,20 +253,9 @@ jobs_final.columns
 # In[85]:
 
 
-jobs_final=jobs_final.drop("country_azduna", axis=1)
+jobs_final=jobs_final.drop("country_adzuna", axis=1)
 
 
-# In[96]:
-
-
-pd.crosstab(jobs_final.currency_name, jobs_final.country)
-#jobs_final.source.value_counts()
-
-
-# In[97]:
-
-
-jobs_final.country.value_counts()
 
 
 # In[99]:
@@ -280,11 +270,8 @@ jobs_final[jobs_final.country=='Not found']
 
 
 jobs_final.head()
-jobs_final['contents'] = jobs_final['contents'].progress_apply(translate_to_english)
+jobs_final['job_description'] = jobs_final['job_description'].progress_apply(translate_to_english)
 
 
-# In[101]:
 
-
-jobs_final.to_pickle('../outputs/final/jobs.pkl')
 

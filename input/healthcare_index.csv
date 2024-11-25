@@ -1,0 +1,219 @@
+﻿Rank;City;Health Care Index;Health CareExp. Index
+1;Kaohsiung, Taiwan;88.2;162.8
+2;Taipei, Taiwan;86.6;159.4
+3;Chiang Mai, Thailand;84.8;155.5
+4;Seoul, South Korea;83.0;152.0
+5;Rotterdam, Netherlands;81.2;149.2
+6;The Hague (Den Haag), Netherlands;80.7;147.7
+7;Valencia, Spain;80.3;148.0
+8;Guadalajara, Mexico;80.0;146.0
+9;Helsinki, Finland;80.0;146.4
+10;Vienna, Austria;79.6;145.8
+11;Porto, Portugal;79.4;145.3
+12;Madrid, Spain;79.3;146.8
+13;Tokyo, Japan;79.0;143.8
+14;Glasgow, United Kingdom;79.0;145.6
+15;Eindhoven, Netherlands;78.9;144.4
+16;Cuenca, Ecuador;78.7;143.1
+17;Medellin, Colombia;78.4;142.9
+18;Amsterdam, Netherlands;78.3;143.1
+19;Oslo, Norway;78.0;142.8
+20;Bursa, Turkey;77.8;141.1
+21;Edinburgh, United Kingdom;77.5;143.1
+22;Munich, Germany;77.4;141.2
+23;Edmonton, Canada;77.3;143.1
+24;Paris, France;77.3;141.4
+25;Copenhagen, Denmark;77.2;142.4
+26;Barcelona, Spain;76.9;142.5
+27;Bangkok, Thailand;76.8;139.9
+28;Stuttgart, Germany;76.7;140.6
+29;Frankfurt, Germany;76.7;140.2
+30;Luxembourg, Luxembourg;76.6;139.5
+31;Madison, WI, United States;76.4;141.6
+32;Brno, Czech Republic;76.3;141.0
+33;Vilnius, Lithuania;76.0;138.4
+34;Hamilton, Canada;75.9;140.6
+35;Hamburg, Germany;74.9;136.7
+36;Sydney, Australia;74.8;135.8
+37;Tallinn, Estonia;74.8;137.0
+38;Kaunas, Lithuania;74.7;137.6
+39;Prague, Czech Republic;74.7;137.0
+40;Nizhny Novgorod, Russia;74.5;134.4
+41;Brisbane, Australia;74.5;135.8
+42;Pattaya, Thailand;74.4;136.5
+43;Manchester, United Kingdom;74.4;136.3
+44;Toronto, Canada;74.3;136.5
+45;Calgary, Canada;74.1;135.8
+46;Adelaide, Australia;73.9;134.5
+47;Tel Aviv-Yafo, Israel;73.8;135.4
+48;Brussels, Belgium;73.6;133.3
+49;Lisbon, Portugal;73.5;133.9
+50;Doha, Qatar;73.4;133.6
+51;Izmir, Turkey;73.1;132.4
+52;Melbourne, Australia;73.0;132.6
+53;Honolulu, HI, United States;72.9;132.7
+54;Boston, MA, United States;72.7;134.0
+55;Antalya, Turkey;72.3;130.8
+56;Belfast, United Kingdom;72.3;135.3
+57;Birmingham, United Kingdom;72.1;134.1
+58;Vancouver, Canada;72.0;131.9
+59;Singapore, Singapore;71.9;133.4
+60;Portland, OR, United States;71.5;132.4
+61;Split, Croatia;71.5;129.2
+62;Milan, Italy;71.5;130.7
+63;Seattle, WA, United States;71.5;133.7
+64;Minneapolis, MN, United States;71.5;133.6
+65;Timisoara, Romania;71.2;128.1
+66;Colombo, Sri Lanka;71.2;128.9
+67;Perth, Australia;71.2;129.2
+68;Abu Dhabi, United Arab Emirates;71.1;129.5
+69;Geneva, Switzerland;71.0;132.4
+70;Columbus, OH, United States;71.0;131.6
+71;Malaga, Spain;70.8;129.7
+72;Canberra, Australia;70.6;127.7
+73;Zurich, Switzerland;70.3;131.3
+74;Philadelphia, PA, United States;70.2;128.4
+75;Washington, DC, United States;70.1;129.6
+76;Istanbul, Turkey;70.0;126.3
+77;London, United Kingdom;70.0;128.3
+78;Mississauga, Canada;69.9;127.5
+79;Denver, CO, United States;69.7;130.5
+80;Dubai, United Arab Emirates;69.7;129.4
+81;Chennai, India;69.4;125.1
+82;Quebec City, Canada;69.3;128.4
+83;Houston, TX, United States;69.3;128.4
+84;Auckland, New Zealand;69.3;125.1
+85;Charlotte, NC, United States;69.2;128.9
+86;Ankara, Turkey;69.2;124.5
+87;Monterrey, Mexico;69.0;124.5
+88;Cape Town, South Africa;68.8;125.5
+89;Austin, TX, United States;68.8;127.0
+90;Ottawa, Canada;68.8;125.5
+91;Coimbatore, India;68.7;124.1
+92;Beijing, China;68.7;124.6
+93;Kuala Lumpur, Malaysia;68.6;123.6
+94;Reykjavik, Iceland;68.6;125.2
+95;Sacramento, CA, United States;68.5;124.3
+96;Montevideo, Uruguay;68.5;123.8
+97;Salt Lake City, UT, United States;68.4;128.9
+98;Buenos Aires, Argentina;68.4;123.9
+99;Winnipeg, Canada;68.4;126.9
+100;San Diego, CA, United States;67.9;125.9
+101;San Antonio, TX, United States;67.9;124.1
+102;Tampa, FL, United States;67.8;124.7
+103;Berlin, Germany;67.5;122.6
+104;Gothenburg, Sweden;67.3;124.5
+105;London, Canada;67.3;122.6
+106;Phoenix, AZ, United States;67.2;125.2
+107;Ahmedabad, India;67.2;120.3
+108;Atlanta, GA, United States;67.1;125.1
+109;Moscow, Russia;67.1;119.9
+110;Ljubljana, Slovenia;67.0;124.5
+111;Astana (Nur-Sultan), Kazakhstan;67.0;119.4
+112;Raleigh, NC, United States;66.9;124.4
+113;Curitiba, Brazil;66.8;119.8
+114;Stockholm, Sweden;66.6;121.4
+115;Delhi, India;66.5;119.4
+116;Dallas, TX, United States;66.4;122.5
+117;Victoria, Canada;66.3;122.2
+118;Halifax, Canada;66.3;122.4
+119;Pretoria, South Africa;66.3;119.5
+120;Turin, Italy;66.2;121.3
+121;Hong Kong, Hong Kong (China);66.0;119.9
+122;Mexico City, Mexico;65.7;117.6
+123;Cluj-Napoca, Romania;65.7;117.4
+124;Pune, India;65.7;118.0
+125;Mumbai, India;65.3;117.2
+126;Santiago, Chile;65.3;120.4
+127;Hyderabad, India;65.3;117.9
+128;Chicago, IL, United States;65.2;121.6
+129;Bogota, Colombia;65.2;116.8
+130;Zagreb, Croatia;65.1;119.3
+131;Bangalore, India;65.1;117.8
+132;Gurgaon, India;65.1;119.5
+133;Amman, Jordan;65.1;116.9
+134;Islamabad, Pakistan;64.9;116.5
+135;Beirut, Lebanon;64.9;121.7
+136;Riyadh, Saudi Arabia;64.7;116.1
+137;Belo Horizonte, Brazil;64.7;116.4
+138;Saskatoon, Canada;64.5;116.4
+139;San Francisco, CA, United States;64.5;119.1
+140;Shanghai, China;64.4;115.4
+141;Porto Alegre, Brazil;64.4;116.1
+142;Wellington, New Zealand;64.3;115.8
+143;Recife, Brazil;64.3;117.3
+144;Muscat, Oman;64.2;114.7
+145;Varna, Bulgaria;63.8;114.2
+146;Kochi, India;63.7;112.8
+147;Miami, FL, United States;63.6;119.5
+148;Rome, Italy;63.4;115.6
+149;San Juan, Puerto Rico;63.0;114.3
+150;Thiruvananthapuram, India;62.8;111.1
+151;New York, NY, United States;62.7;116.9
+152;Montreal, Canada;62.5;116.7
+153;Manila, Philippines;62.5;111.2
+154;Nairobi, Kenya;62.1;110.6
+155;Mangalore, India;62.0;109.1
+156;San Jose, Costa Rica;61.9;112.4
+157;Lahore, Pakistan;61.6;109.7
+158;Los Angeles, CA, United States;61.3;113.1
+159;Saint Petersburg, Russia;61.3;108.6
+160;Tucson, AZ, United States;61.3;110.5
+161;Ho Chi Minh City, Vietnam;61.1;107.5
+162;Lviv, Ukraine;61.0;108.5
+163;Orlando, FL, United States;60.9;111.6
+164;Sarajevo, Bosnia And Herzegovina;60.7;109.3
+165;Riga, Latvia;60.5;108.2
+166;Jeddah (Jiddah), Saudi Arabia;60.4;107.8
+167;Johannesburg, South Africa;60.2;108.1
+168;Sao Paulo, Brazil;59.9;108.4
+169;Kolkata, India;59.8;106.0
+170;Panama City, Panama;58.8;104.4
+171;Durban, South Africa;58.6;103.9
+172;Sofia, Bulgaria;58.5;104.2
+173;Warsaw, Poland;58.4;104.5
+174;Krakow (Cracow), Poland;58.3;104.3
+175;Lima, Peru;58.1;102.0
+176;Kiev (Kyiv), Ukraine;57.9;101.7
+177;Kuwait City, Kuwait;57.8;102.6
+178;Hanoi, Vietnam;57.7;101.1
+179;Wroclaw, Poland;57.4;101.6
+180;Yerevan, Armenia;57.3;101.0
+181;Jakarta, Indonesia;57.2;101.0
+182;Algiers, Algeria;57.1;103.9
+183;Athens, Greece;57.0;101.6
+184;Novosibirsk, Russia;56.9;100.9
+185;Tunis, Tunisia;56.7;100.3
+186;Nicosia, Cyprus;56.6;99.6
+187;Karachi, Pakistan;56.5;99.7
+188;Cork, Ireland;55.8;101.0
+189;Bratislava, Slovakia;55.6;99.6
+190;Thessaloniki, Greece;55.4;98.7
+191;Kathmandu, Nepal;55.3;96.8
+192;Tbilisi, Georgia;55.1;96.2
+193;Santo Domingo, Dominican Republic;54.9;96.0
+194;Bucharest, Romania;54.8;96.7
+195;Skopje, North Macedonia;54.7;98.3
+196;Las Vegas, NV, United States;54.1;96.6
+197;Yekaterinburg, Russia;53.9;94.9
+198;Dnipro, Ukraine;53.7;93.5
+199;Belgrade, Serbia;53.2;94.7
+200;Tehran, Iran;53.1;92.9
+201;Budapest, Hungary;52.1;93.4
+202;Brasilia, Brazil;51.8;91.7
+203;Limassol, Cyprus;51.3;89.0
+204;Dublin, Ireland;51.2;94.1
+205;Gdansk, Poland;51.0;89.0
+206;Odessa (Odesa), Ukraine;51.0;89.7
+207;Novi Sad, Serbia;49.9;90.6
+208;Kharkiv, Ukraine;49.2;85.2
+209;Minsk, Belarus;49.0;86.9
+210;Almaty, Kazakhstan;48.7;85.9
+211;Tirana, Albania;47.8;82.6
+212;Baku, Azerbaijan;47.7;82.9
+213;Lagos, Nigeria;47.5;81.7
+214;Cairo, Egypt;45.9;78.7
+215;Rio de Janeiro, Brazil;45.5;79.9
+216;Casablanca, Morocco;44.5;76.0
+217;Dhaka, Bangladesh;40.2;68.7
+218;Caracas, Venezuela;38.1;66.4

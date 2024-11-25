@@ -5,3 +5,5 @@
 /test_files
 src/conf/__pycache__
 **.pycache
+outputs/intermediate/jobs_adzuna_selected.pkl
+__pycache__/
