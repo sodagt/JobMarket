@@ -1,0 +1,65 @@
+{
+    "danieldatascientest": {
+        "username": "Aminata Ndao",
+        "name": "Aminata Ndao",
+        "email": "aminata.ndao1@orange-sonatel.com",
+        "hashed_password": "$2b$12$qIlKRNDvrs7ZVCgAOYkp7eQmuqdj/doVHdPiub/8sa21XEQ8KSV..",
+        "access": "Module DE"
+    },
+    "johndatascientest": {
+        "username": "sodagayethiam",
+        "name": "John Datascientest",
+        "email": "sodagayethiam@gmail.com",
+        "hashed_password": "$2b$12$NtZFkykAA9Rk2CZ0FjKAzurWoySJyKNQNZFs15NscMSCFWai0YIti",
+        "access": "Module DS"
+    },
+    "sodathiam": {
+        "username": "sodathiam",
+        "name": "Soda thiam",
+        "email": "sodagayethiam@hotmail.com",
+        "hashed_password": "$2b$12$ZvpglnXN/EP4yOrJnkQ2tuPTjBXmjg3Ra4nwOXTJwvffy4fx5wNyO",
+        "access": "Module jobs"
+    },
+    "sodathiam2": {
+        "username": "sodathiam2",
+        "name": "Soda thiam",
+        "email": "sodagayethiam@hotmail.com",
+        "hashed_password": "$2b$12$4qWEJqmmxv306RL/bbkmxeY1ZAnBnKfeKeUBO3GfVSWi.bdV3a2uC",
+        "access": "Module jobs"
+    },
+    "string": {
+        "username": "string",
+        "name": "String",
+        "email": "string",
+        "hashed_password": "$2b$12$1hyRtLws3PpnBZwj2mCB7.K4ffcTjZLePPT/PE8tu9rfQqCQ2yE2G",
+        "access": "string"
+    },
+    "sodathiam5": {
+        "username": "sodathiam5",
+        "name": "String",
+        "email": "string",
+        "hashed_password": "$2b$12$hluAqZWI5RsfCCOBMTB2gehTldlEk0xi3BHfPzAVFZt3cH9eB21vS",
+        "access": "string"
+    },
+    "aminata": {
+        "username": "aminata",
+        "name": "Aminata ndao",
+        "email": "amina@hotmail.com",
+        "hashed_password": "$2b$12$4vik8xnBu0lYzbumpStM/uX1EY1Cr76wherVLvZk5uHJZZrngvp4e",
+        "access": "basic"
+    },
+    "aminata3": {
+        "username": "aminata3",
+        "name": "Aminatandao",
+        "email": "amina@amina.com",
+        "hashed_password": "$2b$12$vSqhHZSO8M28EpESs7rP3epqTdtmibGqsvw2bM.Jn7o5s5lFk5ITO",
+        "access": "basic"
+    },
+    "aminata4": {
+        "username": "aminata4",
+        "name": "Amina",
+        "email": "amina2@ami.fr",
+        "hashed_password": "$2b$12$o7lD3DaUJ6bCZRn4mBLgS.96RU5X5cbQapRVgWe6QM4ofKgIu/.k.",
+        "access": "unlimited"
+    }
+}
