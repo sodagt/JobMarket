@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[ ]:
+
 
 #import re
 # Affiche le répertoire courant
@@ -9,6 +11,8 @@
 #import os
 #os.chdir('/Users/sodagayethiam/Documents/Formations/Parcours_data_engineer/projet_jobmarket/JobMarket/processing')
 
+
+# In[6]:
 
 
 #import packages
