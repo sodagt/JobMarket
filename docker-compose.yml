@@ -213,7 +213,7 @@ services:
     volumes:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
-      - ./exports:/usr/share/kibana/data
+      - ./elasticsearch/exports:/usr/share/kibana/data
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -233,6 +233,14 @@ services:
       timeout: 10s
       retries: 120
 
+  web:
+    build: .
+    ports:
+     - "80:80"
+    volumes:
+     - ./app:/app
+
+     
 volumes:
   certs:
     driver: local
