@@ -53,7 +53,7 @@ es = Elasticsearch(
     [{'host': 'localhost', 'port': 9200, 'scheme': 'https'}],
     basic_auth=('elastic', 'datascientest'),
     verify_certs=True,
-    ca_certs='../elasticsearch/ca/ca.crt',  # Chemin vers le certificat CA
+    ca_certs='../ca/ca.crt',  # Chemin vers le certificat CA
     request_timeout=600
 )
 

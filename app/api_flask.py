@@ -36,7 +36,7 @@ es = Elasticsearch(
     http_auth=('elastic', 'datascientest'), 
     timeout=600,
     verify_certs=True,  # Check SSL certificats
-    ca_certs='../elasticsearch/ca/ca.crt'  # Specify CA certificat path
+    ca_certs='../ca/ca.crt'  # Specify CA certificat path
 
 )
 

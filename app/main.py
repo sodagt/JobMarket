@@ -49,7 +49,7 @@ es = Elasticsearch(
     [{'host': 'localhost', 'port': 9200, 'scheme': 'https'}],
     basic_auth=('elastic', 'datascientest'),
     verify_certs=True,
-    ca_certs='../elasticsearch/ca/ca.crt',  # Chemin vers le certificat CA
+    ca_certs='../ca/ca.crt',  # Chemin vers le certificat CA
     request_timeout=600
 )
 
@@ -273,5 +273,7 @@ jobs_final = jobs_final.reset_index(drop=True)
 jobs_final['job_title'].astype(str) + '-' + jobs_final['company_name'].astype(str) + '-' + jobs_final['city'].astype(str)+'-'+ jobs_final['levels'].astype(str)+'-'+ jobs_final['job_description'].astype(str)+'-'+ jobs_final['contract_type'].astype(str)
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=2222)
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="127.0.0.1", port=2222)
+
+#uvicorn main:app --reload --port 2222
