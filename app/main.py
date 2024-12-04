@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from passlib.context import CryptContext
 from typing import Optional
-import jwt
+#import jwt
 from datetime import datetime, timedelta
 import pickle
 import pandas as pd
@@ -28,8 +28,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 #for logo
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-reco_path = '../outputs/final/indices_reco.pkl'
-distance_path = '../outputs/final/distances_reco.pkl'
+#local path
+#reco_path = '../outputs/final/indices_reco.pkl'
+#distance_path = '../outputs/final/distances_reco.pkl'
+
+#docker path
+reco_path = '/outputs/indices_reco.pkl'
+distance_path = '/outputs/distances_reco.pkl'
 
 with open(reco_path, 'rb') as f:
         indices = pickle.load(f)
@@ -266,8 +271,12 @@ def jobs_country(jobIndustry: str):
     final_result = result['hits']['hits']
     return final_result
 
+#local path
+#jobs_final = pd.read_pickle('../outputs/final/jobs.pkl')
 
-jobs_final = pd.read_pickle('../outputs/final/jobs.pkl')
+#docker path#
+jobs_final = pd.read_pickle('/outputs/jobs.pkl')
+
 jobs_final = jobs_final.reset_index(drop=True)
 
 jobs_final['job_title'].astype(str) + '-' + jobs_final['company_name'].astype(str) + '-' + jobs_final['city'].astype(str)+'-'+ jobs_final['levels'].astype(str)+'-'+ jobs_final['job_description'].astype(str)+'-'+ jobs_final['contract_type'].astype(str)

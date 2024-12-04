@@ -239,6 +239,7 @@ services:
      - "80:80"
     volumes:
      - ./app:/app
+     - ./outputs/final:/outputs
 
      
 volumes:
