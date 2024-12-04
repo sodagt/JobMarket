@@ -61,5 +61,12 @@
         "email": "amina2@ami.fr",
         "hashed_password": "$2b$12$o7lD3DaUJ6bCZRn4mBLgS.96RU5X5cbQapRVgWe6QM4ofKgIu/.k.",
         "access": "unlimited"
+    },
+    "test_docker": {
+        "username": "test_docker",
+        "name": "Test",
+        "email": "test_docker@email.com",
+        "hashed_password": "$2b$12$xPOMeXfPwD4FWYbOSZQvIuW0.9XeLWu5sAFtSoLrgEH4TxAzqQaWq",
+        "access": "unlimited"
     }
 }
