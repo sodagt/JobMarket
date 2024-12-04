@@ -71,6 +71,40 @@ print(user)
 
 
 #Bienvenue
+#@app.get("/",tags=["welcome"])
+#async def read_root():
+"""
+    Description:
+    Cette route renvoie un message de bienvenue.
+    Args:
+    Aucun argument requis.
+    Returns:
+    - HTML: Renvoie  un message de salutation et indiquant comment obtenir un jeton si besoin d'utiliser la recommandation
+    Raises:
+    Aucune exception n'est levée.
+"""
+   # html_content = 
+"""
+    <html>
+        <head>
+            <title>Welcome to JobMarket</title>
+        </head>
+        <body>
+            <h1>👋 Welcome to JobMarket!</h1>
+            <p>Find the job you deserve! JobMarket is an easy way to search for and apply to jobs.</p>
+            <p>To start, register by visiting the signup page: <a href="http://127.0.0.1:2222/register">Sign up</a></p>
+            <p>Already registered? You can log in with your credentials: <a href="http://127.0.0.1:2222/user/login">Login</a></p>
+            <h3>Logo</h3>
+            <img src="http://127.0.0.1:2222/static/image.jpeg"" alt="JobMarket Logo" />
+            <p>Once registered, you will receive a JWT token to authenticate your requests.</p>
+        </body>
+    </html>
+"""
+    #return HTMLResponse(content=html_content)
+#curl -X GET "http://127.0.0.1:2222/"
+
+
+#Bienvenue Docker
 @app.get("/",tags=["welcome"])
 async def read_root():
     """
@@ -91,17 +125,16 @@ async def read_root():
         <body>
             <h1>👋 Welcome to JobMarket!</h1>
             <p>Find the job you deserve! JobMarket is an easy way to search for and apply to jobs.</p>
-            <p>To start, register by visiting the signup page: <a href="http://127.0.0.1:2222/register">Sign up</a></p>
-            <p>Already registered? You can log in with your credentials: <a href="http://127.0.0.1:2222/user/login">Login</a></p>
+            <p>To start, register by visiting the signup page: <a href="/register">Sign up</a></p>
+            <p>Already registered? You can log in with your credentials: <a href="/user/login">Login</a></p>
             <h3>Logo</h3>
-            <img src="http://127.0.0.1:2222/static/image.jpeg"" alt="JobMarket Logo" />
+            <img src="/static/image.jpeg"" alt="JobMarket Logo" />
             <p>Once registered, you will receive a JWT token to authenticate your requests.</p>
         </body>
     </html>
     """
     return HTMLResponse(content=html_content)
-#curl -X GET "http://127.0.0.1:2222/"
-
+#curl -X GET "localhost
 
 
 #inscription de l'utilisateur
