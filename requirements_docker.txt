@@ -4,4 +4,5 @@ passlib[bcrypt]
 python-multipart
 PyJWT
 pandas
-elasticsearch
+elasticsearch[async] 
+aiohttp

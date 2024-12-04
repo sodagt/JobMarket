@@ -49,12 +49,22 @@ print(users_db)
 
 
 from elasticsearch import Elasticsearch
+from elasticsearch import AsyncElasticsearch
 
+"""
 es = Elasticsearch(
     [{'host': 'localhost', 'port': 9200, 'scheme': 'https'}],
     basic_auth=('elastic', 'datascientest'),
     verify_certs=True,
     ca_certs='../ca/ca.crt',  # Chemin vers le certificat CA
+    request_timeout=600
+)
+"""
+es = AsyncElasticsearch(
+    hosts=["https://es01:9200"],
+    ca_certs="/ca/ca.crt",  # Path to the docker CA certificate
+    basic_auth=('elastic', 'datascientest'),  # credentials
+    verify_certs=True,
     request_timeout=600
 )
 
@@ -232,7 +242,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 
 @app.get("/jobs/{jobTitle}" ,tags=["jobs"])
-def jobs_title(
+async def jobs_title(
     jobTitle: str = Path(..., min_length=3, max_length=50), current_user: str = Depends(get_current_user)):
     """
     Description:
@@ -255,11 +265,13 @@ def jobs_title(
     if not jobTitle.replace(" ", "").isalnum():
         raise HTTPException(status_code=400, detail="Invalid format for the searched job")
     
-    result = es.search(
+    result = await es.search(
         index='bigdata-jobs',
-        query={
-        'match': {'job_title': jobTitle}
+        body={ 
+         "query" : {
+             'match': {'job_title': jobTitle}
          }
+       }
     )
     final_result = result['hits']['hits']
     if not final_result:
@@ -273,15 +285,25 @@ def jobs_title(
 #curl -X GET -i http://127.0.0.1:2222/jobs/Software@Engineer
 
 @app.get("/jobs/country/{jobCountry}", tags=["jobs"])
-def jobs_country(jobCountry: str = Path(..., min_length=3, max_length=50), current_user: str = Depends(get_current_user_unlimited)):
+async def jobs_country(jobCountry: str = Path(..., min_length=3, max_length=50), current_user: str = Depends(get_current_user_unlimited)):
     #jobs_country = jobs_full[jobs_full["country"] == jobCountry]
     #jobs_country_json = jobs_country.to_json(orient='records')
 
+    """
     result = es.search(
         index='bigdata-jobs',
         query={
         'match': {'country': jobCountry}
          }
+    )
+    """
+    result = await es.search(
+        index='bigdata-jobs',
+        body={ 
+         "query" : {
+             'match': {'country': jobCountry}
+         }
+       }
     )
 
     final_result = result['hits']['hits']
@@ -294,13 +316,22 @@ def jobs_country(jobCountry: str = Path(..., min_length=3, max_length=50), curre
 
 
 @app.get("/jobs/industry/{jobIndustry}")
-def jobs_country(jobIndustry: str):
- 
+async def jobs_country(jobIndustry: str):
+    """
     result = es.search(
         index='bigdata-jobs',
         query={
         'match': {'industry': jobIndustry}
          } )
+    """
+    result = await es.search(
+        index='bigdata-jobs',
+        body={ 
+        "query" : {
+            'match': {'industry': jobIndustry}
+        }
+      }
+    )
     final_result = result['hits']['hits']
     return final_result
 
