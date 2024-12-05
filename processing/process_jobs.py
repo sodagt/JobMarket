@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
 
 #import re
 # Affiche le répertoire courant
@@ -11,8 +9,6 @@
 #import os
 #os.chdir('/Users/sodagayethiam/Documents/Formations/Parcours_data_engineer/projet_jobmarket/JobMarket/processing')
 
-
-# In[6]:
 
 
 #import packages
@@ -37,9 +33,6 @@ from langdetect import detect
 #pd.set_option('display.max_colwidth', None)  # show all lines of the dataframe 
 
 
-# In[2]:
-
-
 #define data and cache paths
 raw_path = '../outputs/raw/'
 cache_path = '../outputs/intermediate/location_cache.pkl'
@@ -62,8 +55,6 @@ print('shape jobs_linkedin:',jobs_linkedin.shape)
 print('shape jobs_themuse:',jobs_themuse.shape)
 print('shape jobs_wttj:',jobs_wttj.shape)
 
-
-# In[3]:
 
 
 print('Treatment of jobs adzuna')
@@ -93,62 +84,23 @@ jobs_adzuna_selected=jobs_adzuna_selected.drop_duplicates()
 print( 'taille jobadzuna apres dedoubloonnage', jobs_adzuna_selected.shape)
 
 
-# In[4]:
-
-
-#jobs_adzuna_selected.location.nunique() #16329
-#jobs_adzuna_selected.location.count() 
-
-
-# In[5]:
-
 
 
 load_location_cache(cache_path)
 jobs_adzuna_selected [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'currency_name','country_code','codeIso_lvl4' ]]= jobs_adzuna_selected['location'].progress_apply(get_infos_location)
 
 
-# In[ ]:
-
-
-jobs_adzuna_selected.columns
-
-
-# In[ ]:
-
-
-#location_cache['Phoenix, eThekwini']
-#correction_location('Phoenix, eThekwini')
-
-
-# In[51]:
-
-
-jobs_adzuna_selected.head()
-
-
-# In[33]:
 
 
 #save jobs_adzuna_selected
 #jobs_adzuna_selected.to_pickle('../outputs/intermediate/jobs_adzuna_selected.pkl')
 
-
-# In[55]:
 
 
 #save jobs_adzuna_selected
 #jobs_adzuna_selected.to_pickle('../outputs/intermediate/jobs_adzuna_selected.pkl')
 jobs_adzuna_selected=pd.read_pickle('../outputs/intermediate/jobs_adzuna_selected.pkl')
 
-
-# In[ ]:
-
-
-jobs_themuse.head() 
-
-
-# In[6]:
 
 
 print('Treatment of jobs The Muse')
@@ -178,25 +130,11 @@ jobs_theMuse_selected["source"] = "TheMuse"
 jobs_theMuse_selected=jobs_theMuse_selected.drop_duplicates()
 print( 'taille jobs_theMuse apres dedoubloonnage', jobs_theMuse_selected.shape)
 
-jobs_theMuse_selected.head()
-
-
-# In[7]:
 
 
 load_location_cache(cache_path)
 jobs_theMuse_selected [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'currency_name','country_code','codeIso_lvl4' ]]= jobs_theMuse_selected['location'].progress_apply(get_infos_location)
 
-
-# In[28]:
-
-
-
-#df[['currency', 'min_salary', 'max_salary']] = df['salary'].apply(extract_salary_info)
-jobs_wttj.head()
-
-
-# In[29]:
 
 
 print('Treatment of jobs Welcome to te jungle')
@@ -228,11 +166,6 @@ jobs_wttj_selected["source"] = "Wttj"
 jobs_wttj_selected=jobs_wttj_selected.drop_duplicates()
 
 
-jobs_wttj_selected.head()
-
-
-# In[30]:
-
 
 #cache_path = '../outputs/intermediate/location_cache.pkl'
 
@@ -240,17 +173,7 @@ load_location_cache(cache_path)
 jobs_wttj_selected [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'currency_name','country_code','codeIso_lvl4' ]]= jobs_wttj_selected['streetAdress_wttj'].progress_apply(get_infos_location)
 
 print( 'taille jobs_theMuse_selected', jobs_wttj_selected.shape)
-#save_location_cache(cache_path)
-
-
-# In[ ]:
-
-
-#jobs_linkedin.link.unique()
-jobs_linkedin.head()
-
-
-# In[12]:
+save_location_cache(cache_path)
 
 
 print('Treatment of jobs Linkedin')
@@ -268,13 +191,6 @@ jobs_linkedin_selected['publication_date'] = pd.to_datetime(jobs_linkedin_select
 
 jobs_linkedin_selected['contract_type']='not available'
 
-#jobs_linkedin_selected['locations_company']='not available'
-
-#jobs_linkedin_selected['job_description'] = jobs_linkedin_selected['job_description'].apply(clean_text)
-jobs_linkedin_selected.head()
-
-
-# In[13]:
 
 
 
@@ -283,39 +199,21 @@ load_location_cache(cache_path)
 jobs_linkedin_selected [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'currency_name','country_code','codeIso_lvl4' ]]= jobs_linkedin_selected['location'].progress_apply(get_infos_location)
 
 
-# In[31]:
 
 
 print('Fusion of the 4 sources')
 
 jobs1 = pd.concat([jobs_linkedin_selected, jobs_theMuse_selected], axis=0, ignore_index=True)
-#jobs1 = jobs1.reset_index(drop=True)
 jobs2 = pd.concat([jobs1, jobs_adzuna_selected], axis=0, ignore_index=True)
-#jobs2 = jobs2.reset_index(drop=True)
-#jobs_wttj_selected = jobs_wttj_selected.reset_index(drop=True)
 
 jobs_final = pd.concat([jobs2, jobs_wttj_selected], axis=0, ignore_index=True)
 jobs_final=jobs_final.drop_duplicates()
-#jobs = pd.concat([jobs2, jobs_wttj_selected], axis=0)
 
 shape=jobs_final.shape
 print(f"shape of fusionned dataframe : {shape}")
-#Taille du dataframe fusionné : (16269, 21)
 
 
-# In[80]:
 
-
-#clean the final dataframe
-#jobs_final=jobs_final.drop("country_adzuna", axis=1)
-jobs_final.country.value_counts()
-#pd.crosstab(jobs_final.currency_name, jobs_final.country_code)
-#jobs_final.source.value_counts()
-#pd.crosstab(jobs_final.country, jobs_final.country_adzuna)
-#pd.crosstab(jobs_final.country, jobs_final.country_wttj)
-
-
-# In[ ]:
 
 
 #Correct country whch are not found by geopy from the location via the country in adzuna
@@ -327,17 +225,8 @@ country_dict = { 'au': 'Australia', 'be': 'België / Belgique / Belgien', 'br': 
 
 jobs_final = jobs_final.reset_index(drop=True)
 jobs_final.loc[jobs_final['country'] == 'Not found', 'country'] = jobs_final.apply( lambda row: country_dict.get(row['country_adzuna'], 'Unknown'), axis=1)
-jobs_final=jobs_final.drop("country_adzuna", axis=1)
 
-#jobs_final.country.value_counts()
-#jobs_final['contents'] = jobs_final['contents'].progress_apply(translate_to_english)
-
-
-#jobs_final.currency_name.value_counts()
-#jobs_final[jobs_final.country=='Not found']
-
-
-# In[95]:
+# In[49]:
 
 
 jobs_final = jobs_final[jobs_final['job_title'].notnull()] #make sure we have'nt jobs without title
@@ -384,6 +273,7 @@ jobs_final['longitude'] = jobs_final['longitude'].replace('Not found', '0').asty
 #replace Unknown values by not found to standardize
 jobs_final.loc[jobs_final['state'] == "Unknown", 'state'] = 'Not found'
 jobs_final.loc[jobs_final['city'] == "Unknown", 'city'] = 'Not found'
+jobs_final['city'] = jobs_final['city'].str.replace("'","")
 jobs_final.loc[jobs_final['postcode'] == "Unknown", 'postcode'] = 'Not found'
 
 #replace specific values of countries not found by the script
@@ -403,32 +293,49 @@ jobs_final.loc[jobs_final['currency_name'].isin(['Unknown', 'Not found']), 'curr
 jobs_final['job_description'] =jobs_final['job_description'].apply(lambda x: BeautifulSoup(x, "html.parser").get_text())
 jobs_final['job_description'] = jobs_final['job_description'].apply(clean_text)
 
-#translate text from french or german to english
-jobs_final['job_title'] = jobs_final['job_title'].progress_apply(translate_to_english)
-jobs_final['job_description'] = jobs_final['job_description'].progress_apply(translate_to_english)
 
 jobs_final['lang'] = jobs_final['job_description'].progress_apply(detect)
 
 
-# In[ ]:
+
+jobs_en=jobs_final[jobs_final['lang'] == 'en']
+jobs_no_en = jobs_final[jobs_final['lang'] != 'en']
 
 
 
-"""from functools import lru_cache
+
+from functools import lru_cache
 @lru_cache(maxsize=None)
 def cached_translate(text):
     return translate_to_english(text)
 
-jobs_final['job_description'] = jobs_final['job_description'].progress_apply(cached_translate)"""
-
-
-# In[20]:
-
-
-jobs_final['lang'].value_counts()
+#jobs_final['job_description'] = jobs_final['job_description'].progress_apply(cached_translate)"""
+#translate text from french or german to english
+jobs_no_en['job_title'] = jobs_no_en['job_title'].progress_apply(cached_translate)
+jobs_no_en['job_description'] = jobs_no_en['job_description'].progress_apply(cached_translate)
 
 
 # In[ ]:
+
+
+jobs_final['city'] = jobs_final['city'].str.replace("'","")
+
+
+# In[65]:
+
+
+jobs_final = pd.concat([jobs_en, jobs_no_en])
+jobs_final['lang'] = jobs_final['job_description'].progress_apply(detect)
+
+
+# In[4]:
+
+
+#jobs_final=pd.read_pickle('../outputs/intermediate/jobs_all.pkl')
+
+
+
+# In[5]:
 
 
 town_data=pd.read_pickle('../outputs/intermediate/town_data.pkl')
@@ -461,32 +368,18 @@ for column in index_life_col:
 jobs_city_country.drop(columns=[f'{column}_country_avg' for column in index_life_col], inplace=True)
 #replace the last NA values by the mean
 jobs_city_country[index_life_col] = jobs_city_country[index_life_col].fillna(jobs_city_country[index_life_col].mean())
-
-#pd.crosstab(jobs_final.currency_name, jobs_final.country)
-
-
-# In[171]:
+jobs_final=jobs_city_country
 
 
 
 #jupyter nbconvert --to script process_jobs.ipynb
 
 
-# In[28]:
-
-
-jobs_final.loc[jobs_final['country_code'].isin( ['Not found']), 'country'].value_counts()
-jobs_final.currency_name.value_counts()
-
-
-# In[232]:
-
 
 #Avoid  double entries in the dataframe
-
-jobs_final.loc[:, 'clef_doublons'] = jobs_final['job_title'].astype(str) + '-' + jobs_final['company_name'].astype(str) + '-' + jobs_final['city'].astype(str)+'-'+ jobs_final['levels'].astype(str)+'-'+ jobs_final['job_description'].astype(str)+'-'+ jobs_final['contract_type'].astype(str)
+jobs_final.loc[:, 'clef_doublons'] = jobs_final['job_title'].astype(str) + '-' + jobs_final['company_name'].astype(str) + '-' + jobs_final['city'].astype(str)+'-'+ jobs_final['levels'].astype(str)+'-'+ jobs_final['job_description'].astype(str)+'-'+ jobs_final['industry'].astype(str)+'-'+ jobs_final['category'].astype(str)
 doublons_freq = jobs_final['clef_doublons'].value_counts()
-print(doublons_freq[doublons_freq > 1])  # Afficher uniquement les doublons
+#print(doublons_freq[doublons_freq > 1])  # Afficher uniquement les doublons
 
 aggregation_rules = {col: 'first' for col in jobs_final.columns}
 aggregation_rules.update({
@@ -499,11 +392,6 @@ aggregation_rules.update({
 })
 jobs_final = jobs_final.groupby('clef_doublons').agg(aggregation_rules).reset_index(drop=True)
 jobs_final = jobs_final.drop('clef_doublons', axis=1)
-
-jobs_final.shape
-
-
-# In[23]:
 
 
 columns_to_keep = [ 'job_title', 'contract_time', 'company_name', 'salary_min',
@@ -518,13 +406,25 @@ columns_to_keep = [ 'job_title', 'contract_time', 'company_name', 'salary_min',
     'Affordability_Index']
 
 jobs_final = jobs_final[columns_to_keep]
-jobs_final=jobs_final[jobs_final['lang'] == 'en']
 
 
-# In[25]:
+
+
+jobs_final = jobs_final[(jobs_final['lang'] == 'en') | (jobs_final['source'] == 'linkedin')]
+#jobs_final=pd.read_pickle('../outputs/final/jobs.pkl')
+jobs_final = jobs_final.reset_index().rename(columns={'index': 'index_jobs'})
+
+
+
+jobs_final['index_jobs'] = range(len(jobs_final))
+
+
+# In[20]:
 
 
 jobs_final.to_pickle('../outputs/final/jobs.pkl')
-#jobs_final=pd.read_pickle('../outputs/final/jobs.pkl')
-#'''FINNNNNNNNNNNNNNNNNNNNN'''
+
+
+jobs_final.index_jobs.describe()
+
 
