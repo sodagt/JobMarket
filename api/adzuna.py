@@ -1,80 +1,26 @@
 """
-Cette classe nous permet de webscrapper les données du site Adzuna.
-
+    This class is use to webscrapp adzuna jobs
 """
+
 import sys
 import time
-
-#print("Before Modified sys.path:", sys.path)
-#sys.path.append('../..')
-# Print the modified sys.path
-#print("Modified sys.path:", sys.path)
-
-#from sys import argv
-
-
 import requests
 from bs4 import BeautifulSoup as bs_adzuna
 import pandas as pd
-import json
 
-
-#from elasticsearch import Elasticsearch
-#from elasticsearch.helpers import bulk
-
-#from configs.conf import es
-#from common.utils import insert_data_elk
-
-
-
-#url_adzuna = "https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&content-type=text/html"
-url_adzuna = "https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=100"
-url_adzuna_gb = "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=1000"
-
-
-
-#countries = ['au','be','br','ca','ch','de','es','fr','gb','in','it','mx','nl','nz','pl','sg','us','za']
-countries = ['in','it','mx','nl','nz','pl','sg','us','za']
-
-#countries = ['au','be']
-#us as united states, gb as great britain, at as autralia
-#avaailables countries are au, be, br, ca, ch, de, es, fr, gb, in, it, mx, nl, nz, pl, sg, us, za
 
 """
-page_adzuna = requests.get(url_adzuna)
-soup_adzuna = bs_adzuna(page_adzuna.content,"lxml")
-#print(soup_adzuna)
-#print(soup_adzuna.prettify())
-
-#html body dl dd ol li dt
-
-# START JSON PART
-data = page_adzuna.json()
-output = json.dumps(data, indent=4)
-#print(output)
-
-
-recs = data['results']
-df = pd.json_normalize(recs)
-#print(df.shape)
-
-
-#df_test = pd.DataFrame(df)
-
-#print(df_test.shape)
-#print(df.info)
-#print(df['salary_max'])
+    availables countries are au, be, br, ca, ch, de, es, fr, gb, in, it, mx, nl, nz, pl, sg, us, za
+    us as United States, gb as Great Britain, at as Autralia and so on
 """
+
+countries = ['au','be','br','ca','ch','de','es','fr','gb','in','it','mx','nl','nz','pl','sg','us','za']
+
 
 #get data and create data frame
-#for country in countries:
-#    page_adzuna_new = requests.get("https://api.adzuna.com/v1/api/jobs/"+country+"/search/"+str(i)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=100")
-
 for country in countries:
 
     df = pd.DataFrame()
-
-
     print(country)
 
     error_page = 0
@@ -84,25 +30,23 @@ for country in countries:
         print(page)
         time.sleep(2)
 
-        #new_url = "https://api.adzuna.com/v1/api/jobs/us/search/"+str(i)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff"
+
+        """
+            Adzuna limits the number of requests by key id for 24H.
+            Reason why we use two key id in order to get more jobs possible in less time. 
+        """
+
         #first key id
         #url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=5af6dd44&app_key=9eaaa1ee41c2d62124d0b345d43499ff&results_per_page=100"
                 
         #second key id
         url = "https://api.adzuna.com/v1/api/jobs/"+str(country)+"/search/"+str(page)+"?app_id=203b447b&app_key=d5b8b476bf953c4fefe2d21abf95bd92&results_per_page=100"
 
+
         #print(url)
+
+
         page_adzuna_new = requests.get(url)
-
-        """params "created": "2024-05-14T16:53:36Z"
-        day: 2024-05-14
-        params = {
-            "created_date": day  # Replace 'created_date' with the actual parameter name
-        }
-
-        # Send the GET request
-        response = requests.get(api_url, params=params)
-        """
 
         if page_adzuna_new.status_code == 200:
             try:
@@ -120,20 +64,27 @@ for country in countries:
 
             error_type = page_adzuna_new.status_code
 
-            if (error_page == 30): 
+            """
+                if we have more than 10 pages error, it seems like we don't get any data for that country.
+                In this case, we just change the country and try to get data from another one.
+            """
+            if (error_page == 10): 
                 print("Switching Country")
-                countries_iter = iter(countries)         # Convert list to iterator
-                country = next(countries_iter, None)      # Get the next item or None if at the end
+                countries_iter = iter(countries)         # Convert country list to iterator
+                country = next(countries_iter, None)      # Get the next country item or None if at the end
                 print(country)
                 error_page = 0
                 df = pd.DataFrame()
                 break
             
+            """
+                if we have 429 error, it seems like we have exceeded our limit for the day.
+                In this case, we stop the webscrapping script.
+            """
             if error_type == 429: sys.exit()
 
             
-
-
+    #save raw data
     df.to_pickle('outputs/raw/jobs_adzuna_'+country+'_nov.pkl')
 
 
@@ -144,25 +95,16 @@ print(df.head(5))
 #print(df.columns)
 #print(df['company.display_name'].head(5))
 
-#save raw data
-#df.to_pickle('outputs/raw/jobs_adzuna_us_nov.pkl')
 
-''' 
-#Write df in ElasticSearch
+"""
+Next Step for AirFlow
 
-#Create index in needed
-if not es.indices.exists(index="bigdata-adzuna"):
-   es.indices.create(index="bigdata-adzuna")
+params "created": "2024-05-14T16:53:36Z"
+day: 2024-05-14
+params = {
+    "created_date": day  # Replace 'created_date' with the actual parameter name
+}
 
-
-
-
-insert_data_elk(df)
-
-df['ingest_date'] = pd.Timestamp.now()
-
-# Search document
-res = es.search(index="bigdata-adzuna", body={"query": {"match_all": {}}})
-print(res)
-
-'''
+# Send the GET request
+response = requests.get(api_url, params=params)
+"""
