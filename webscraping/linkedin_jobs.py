@@ -1,6 +1,5 @@
 """
-Cette classe nous permet de webscrapper les offres d'emploi du site LinkedIn.
-
+    This class is use to webscrapp linkedin offers
 """
 
 #import sys
@@ -14,12 +13,6 @@ import pickle
 import requests
 from bs4 import BeautifulSoup as bs_linkedin 
 
-#from pyspark.sql import SparkSession
-#from pyspark.sql.functions import lit
-
-#from configs.conf import es
-#from common.utils import insert_data_elk
-
 
 url_linkedin ='https://www.linkedin.com/jobs/search?trk=guest_homepage-basic_guest_nav_menu_jobs&position='
 
@@ -31,17 +24,13 @@ url_linkedin_product_manager = 'https://www.linkedin.com/jobs/search?keywords=pr
 job_titles,job_companies,job_locations,job_links, jobs_posted_times, company_links  = [],[],[],[],[],[]
 
 max_page_number = 150
+max_position_number = 50
 
 
 #get macro information from main page
-
 def linkedin_scraper(webpage, page_number):
-    #next_page = webpage + str(page_number)
-    #print(str(next_page))
-    #response = requests.get(str(next_page))
-    #soup = bs_linkedin(response.content,'html.parser')
-    #jobs = soup.find_all('div', class_='base-card relative w-full hover:no-underline focus:no-underline base-card--link base-search-card base-search-card--link job-search-card')
-        
+
+ 
     print("page_number")
 
     for page_number in range (0,max_page_number):
@@ -50,22 +39,16 @@ def linkedin_scraper(webpage, page_number):
         print(page_number)
 
         next_page = webpage + str(page_number)
-        #print("current_page")
-        #print(str(next_page))
+       
         response = requests.get(str(next_page))
-        #linkedin_scraper(webpage, page_number)
-        #print(response)
         
         soup_linkedin = bs_linkedin(response.content,'lxml')
         jobs_linkedin = soup_linkedin.find_all('div', class_='base-card relative w-full hover:no-underline focus:no-underline base-card--link base-search-card base-search-card--link job-search-card')
-        #print(jobs_linkedin)
 
 
         for job in jobs_linkedin:
             job_title = job.find('h3', class_='base-search-card__title').text.strip()
             job_titles.append(job_title)
-            #print("job_title")
-            #print(job_title)
 
             job_company = job.find('h4', class_='base-search-card__subtitle').text.strip()
             job_companies.append(job_company)
@@ -85,43 +68,38 @@ def linkedin_scraper(webpage, page_number):
             elif job_posted_time_new is not None : 
                 job_posted_time = job.find('time',class_='job-search-card__listdate--new')['datetime']
 
-            #print(job_posted_time)
             jobs_posted_times.append(job_posted_time)
 
-            #print(job_title)
-            #print(job_company)
 
 
-print("SLEEP BEFORE POSITION linkedin_scraper")
+print("SLEEP BEFORE POSITION linkedin_scraper in page")
 time.sleep(3)
 
 print("START POSITION linkedin_scraper")
-for position in range(10,15):
+for position in range(1,max_position_number):
     print("***************** POSITION "+str(position))
     linkedin_scraper(url_linkedin+str(position)+'&pageNum=', 0)
 
 
-print(job_titles[1])
-print(job_companies[7])
-print(job_locations[3])
-print(job_links[10])
-print(jobs_posted_times[27])
+
+"""
+    Exploring job link
+
+    We get more information about the job in job_link. Example: salaries, industries,..
+    Let's webscrapp the job_link !
+"""
 
 
+print("SLEEP BEFORE JOB LINK")
 time.sleep(10)
-print("STARTING JOB LINK")
-
-
-#exploring job link
 
 salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries =[],[],[],[],[],[],[]
 
-#def linkedin_scraper_job_link(job_links):
-#get more information from job link
+print("START JOB LINK")
 for job_link in job_links:
+        
         linkedin_jobs_link = requests.get(job_link)
         soup_jobs_link = bs_linkedin(linkedin_jobs_link.content,"lxml")
-        #print(soup_jobs_link)
 
         salary=""
         salary_min= ""
@@ -135,14 +113,8 @@ for job_link in job_links:
         
         #get company link
         company_link =  soup_jobs_link.find('a', class_='topcard__org-name-link')
-        #company_links.append(company_link)
         if company_link is not None:
-            #print("Company Link:", company_link)
             company_links.append(company_link['href'])
-
-        #else:
-         #   print("No link found with the specified class.")
-
 
         
         if salary_info_block is not None: 
@@ -165,9 +137,8 @@ for job_link in job_links:
         salaries_min.append(salary_min)
         salaries_max.append(salary_max)
 
-        #get job criteria
 
-                
+        #get job criteria
         job_criteria = soup_jobs_link.find_all('li',class_='description__job-criteria-item')
 
         for criteria in job_criteria:
@@ -190,17 +161,17 @@ for job_link in job_links:
                 job_industry = criteria.find_next('span',class_='description__job-criteria-text description__job-criteria-text--criteria').text.strip().replace('\n','')
                 #print(job_industry)
                 job_industries.append(job_industry)
+print("END JOB LINK")
 
 
 
+print("SLEEP BEFORE WRITTING DF")
 time.sleep(10)
-print("STARTING JOB DF")
 
+
+print("///////////////////////////////////// START CONVERTING JOB to DF")
 
 liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links]
-
-print("/////////////////////////////////////")
-print(liste[0])
 
 df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links)), 
                        columns=["title", "company", "location","link","salary","salary_min","salary_max","seniority_level","employment_type","job_function","job_industry","posted_time","company_link"]).reset_index(drop=True)
@@ -208,50 +179,26 @@ df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locat
 df_linkedin_scrapping["source"] = "linkedin"
 df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
 
+print("///////////////////////////////////// END CONVERTING JOB to DF")
 
 
-df_linkedin_scrapping.shape
 
-print("/////////////////////////////////////")
-#print(type(df_linkedin_scrapping))
-print(df_linkedin_scrapping.head(5))
+
+print("///////////////////////////////////// START PIKCLING JOBS")
 
 #Save raw data
 df_linkedin_scrapping.to_pickle('outputs/raw/jobs_linkedin_nov_15.pkl')
 
 print("///////////////////////////////////// END PIKCLING JOBS")
 
-#pickle company_links list to get it after for company's DF 
+
+
+
+print("///////////////////////////////////// START PIKCLING COMPANIES LINKS")
+
+#pickle company_links list to optimize processing time for company's DF 
 distinct_company_links = list(set(company_links))
 company_links_df = pd.DataFrame(distinct_company_links)
 company_links_df.to_pickle("outputs/raw/company_links_nov_15.pkl")
 
-#with open("outputs/raw/company_links.pkl","wb") as file:
-#    pickle.dump(distinct_company_links,file)
-
 print("///////////////////////////////////// END PIKCLING COMPANIES LINKS")
-
-
-
-
-#from elasticsearch import Elasticsearch
-
-
-#Write df in ElasticSearch
-
-#Create index in needed
-#if not es.indices.exists(index="bigdata-linkedin"):
-#    es.indices.create(index="bigdata-linkedin")
-
-
-
-''' 
-#insert_data_elk(df_linkedin_scrapping)
-
-
-# Search document
-res = es.search(index="bigdata-linkedin", body={"query": {"match_all": {}}})
-print(res)
-'''
-
-

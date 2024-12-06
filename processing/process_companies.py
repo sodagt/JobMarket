@@ -138,6 +138,9 @@ companies [['country', 'state', 'city', 'postcode', 'latitude', 'longitude', 'cu
 companies['latitude'] = companies['latitude'].replace('Not found', '0').astype(float)
 companies['longitude'] = companies['longitude'].replace('Not found', '0').astype(float)
 
+companies['avg_age_employees'] = companies['avg_age_employees'].str[:3].replace('', '0').replace('not','0').replace(' ans','').astype(float)
+companies['nb_employee'] = companies['nb_employee'].replace('not available', '0').replace('', '0').astype(float)
+
 
 print ('Step 8/8: Manage duplicated companies')
 
