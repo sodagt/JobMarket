@@ -11,5 +11,5 @@ COPY ./requirements_docker.txt /app/requirements.txt
 # Install any needed packages specified in requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Run main when the container launches
+# Run fast api main when the container launches
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
