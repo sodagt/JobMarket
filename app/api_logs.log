@@ -1,0 +1,25 @@
+2024-12-07 22:19:57,608 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:19:57,611 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, Status=200, Duration=3ms
+2024-12-07 22:19:58,309 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:19:58,320 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, Status=200, Duration=11ms
+2024-12-07 22:24:55,247 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:24:55,252 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, Status=200, Duration=4ms
+2024-12-07 22:24:55,587 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:24:55,639 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, Status=200, Duration=52ms
+2024-12-07 22:25:30,327 - INFO - Incoming request: User=Basic Og==, Method=POST, Endpoint=/token, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:25:30,370 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-12-07 22:25:30,674 - INFO - Request processed: User=Basic Og==, Method=POST, Endpoint=/token, IP=192.168.65.1, Status=200, Duration=347ms
+2024-12-07 22:26:00,478 - INFO - Incoming request: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/company/facebook, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:26:00,682 - INFO - POST https://es01:9200/bigdata-companies/_search [status:200 duration:0.191s]
+2024-12-07 22:26:00,683 - INFO - Request processed: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/company/facebook, IP=192.168.65.1, Status=404, Duration=205ms
+2024-12-07 22:26:10,233 - INFO - Incoming request: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/company/meta, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:26:10,267 - INFO - POST https://es01:9200/bigdata-companies/_search [status:200 duration:0.030s]
+2024-12-07 22:26:10,272 - INFO - Request processed: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/company/meta, IP=192.168.65.1, Status=200, Duration=39ms
+2024-12-07 22:26:28,989 - INFO - Incoming request: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/recommender_engine/data, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-07 22:26:29,130 - INFO - POST https://es01:9200/bigdata-jobs/_search [status:200 duration:0.137s]
+2024-12-07 22:26:29,195 - INFO - POST https://es01:9200/bigdata-jobs/_search [status:200 duration:0.035s]
+2024-12-07 22:26:29,288 - INFO - Request processed: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/recommender_engine/data, IP=192.168.65.1, Status=200, Duration=299ms
