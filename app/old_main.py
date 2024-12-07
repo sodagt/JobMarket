@@ -41,19 +41,12 @@ with open(distance_path, 'rb') as f:
 
 
 from elasticsearch import Elasticsearch
-"""
-es = Elasticsearch(
-    [{'host': 'localhost', 'port': 9200, 'scheme': 'https'}],
-    http_auth=('elastic', 'datascientest'), 
-    timeout=600,
-    verify_certs=True,  # Check SSL certificats
-    ca_certs='../elasticsearch/ca/ca.crt'  # Specify CA certificat path
-)""" 
+
 es = Elasticsearch(
     [{'host': 'localhost', 'port': 9200, 'scheme': 'https'}],
     basic_auth=('elastic', 'datascientest'),
     verify_certs=True,
-    ca_certs='../ca/ca.crt',  # Chemin vers le certificat CA
+    ca_certs='/ca/ca.crt',  # Chemin vers le certificat CA
     request_timeout=600
 )
 

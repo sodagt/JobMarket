@@ -36,7 +36,7 @@ es = Elasticsearch(
     http_auth=('elastic', 'datascientest'), 
     timeout=600,
     verify_certs=True,  # Check SSL certificats
-    ca_certs='../ca/ca.crt'  # Specify CA certificat path
+    ca_certs='ca/ca.crt'  # Specify CA certificat path
 
 )
 
@@ -122,6 +122,7 @@ if __name__ == "__main__":
 
 #exemple requete curl
 ##curl -XGET 'localhost:9200/bigdata-jobs/doc/_validate?q=field:value’
+##curl -XGET 'http://127.0.0.1:2222/jobs/country?country=India'
 
 
 
@@ -134,21 +135,6 @@ def status():
         return "L'API ne fonctionne pas",400
 
 
-
-@api.route("/welcome/<name>")
-def welcome(name):
-    return "Hello {} \n. Welcome to our API.".format(name)
-
-
-
-@app.route("/jobs",methods=["POST","GET"])
-def jobs():
-    if request.method=="POST" :
-        data = request.get_json()
-        return "Hello {} \n".format(data["name"])
-    return jobs_full_json
-
-
 @app.route("/jobs")
 @validate()
 def country(query:Country):
@@ -158,11 +144,4 @@ def country(query:Country):
 
     return jobs_country_json
 
-    
-
-@api.route("/jobs",methods=["POST","GET"])
-def jobs():
-    if request.method=="POST" :
-        data = request.get_json()
-        return "Hello {} \n".format(data["name"])
-    return jobs_full_json  """
+ """
