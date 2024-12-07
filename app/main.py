@@ -1,20 +1,19 @@
-from fastapi import FastAPI, Depends, HTTPException, Body, status,Query,Path
+from fastapi import FastAPI, Depends, HTTPException, Body, status,Query,Path,Request, Response
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-#from pydantic import BaseModel
 from passlib.context import CryptContext
-#from typing import Optional
-#import jwt
-from datetime import timedelta #datetime
+from datetime import timedelta 
+import time
 import pickle
 import pandas as pd
 import numpy as np
-#import uvicorn
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from elasticsearch import AsyncElasticsearch
+import logging
 
 from auth import ACCESS_TOKEN_EXPIRATION, create_access_token,verify_password , Token ,get_current_user, get_current_user_unlimited#,     JWTBearer,decode_jwt,sign_jwt,token_response
 from users import load_users_from_file, save_users_to_file ,UserSchema # read_users,write_users  ,   ,check_user
+
 
 
 app= FastAPI(
@@ -43,6 +42,41 @@ with open(distance_path, 'rb') as f:
 #Load user
 users_db = load_users_from_file("users.json")
 #print(users_db)
+
+
+#  logger configuration
+logging.basicConfig(
+    filename='api_logs.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+@app.middleware("http")
+async def log_request_response(request: Request, call_next):
+    """
+    Middleware to capt the data from requests and response 
+    """
+    start_time = time.time()
+    user = request.headers.get("Authorization", "Anonymous")
+    method = request.method
+    endpoint = request.url.path
+    ip_address = request.client.host
+    user_agent = request.headers.get("User-Agent")
+
+    # Initial requests log  
+    logging.info(f"Incoming request: User={user}, Method={method}, Endpoint={endpoint}, IP={ip_address}, UserAgent={user_agent}")
+
+    response: Response = await call_next(request)
+
+    duration_ms = int((time.time() - start_time) * 1000)
+    status_code = response.status_code
+
+    # response log  
+    logging.info(f"Request processed: User={user}, Method={method}, Endpoint={endpoint}, IP={ip_address}, "
+                 f"Status={status_code}, Duration={duration_ms}ms")
+
+    return response
+
 
 
 #from elasticsearch import Elasticsearch
