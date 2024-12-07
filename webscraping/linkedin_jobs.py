@@ -169,8 +169,7 @@ print("SLEEP BEFORE WRITTING DF")
 time.sleep(10)
 
 
-print("///////////////////////////////////// START CONVERTING JOB to DF")
-
+print("///////////////////////////////////// START CONVERTING JOBS to DF")
 liste = [job_titles,job_companies,job_locations,job_links, salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links]
 
 df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locations,job_links,salaries, salaries_min, salaries_max, seniority_levels, employment_types, job_functions, job_industries, jobs_posted_times, company_links)), 
@@ -178,8 +177,7 @@ df_linkedin_scrapping = pd.DataFrame(list(zip(job_titles,job_companies,job_locat
                                  
 df_linkedin_scrapping["source"] = "linkedin"
 df_linkedin_scrapping['ingest_date'] = pd.Timestamp.now()
-
-print("///////////////////////////////////// END CONVERTING JOB to DF")
+print("///////////////////////////////////// END CONVERTING JOBS to DF")
 
 
 
