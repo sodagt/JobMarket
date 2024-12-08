@@ -7,3 +7,8 @@ src/conf/__pycache__
 **.pycache
 outputs/intermediate/jobs_adzuna_selected.pkl
 __pycache__/
+*.key
+*.pem
+id_rsa
+outputs/intermediate/jobs_all.pkl
+processisng/reco_api.py
