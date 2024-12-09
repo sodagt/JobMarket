@@ -23,3 +23,23 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2024-12-07 22:26:29,130 - INFO - POST https://es01:9200/bigdata-jobs/_search [status:200 duration:0.137s]
 2024-12-07 22:26:29,195 - INFO - POST https://es01:9200/bigdata-jobs/_search [status:200 duration:0.035s]
 2024-12-07 22:26:29,288 - INFO - Request processed: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0X2RvY2tlciIsImV4cCI6MTczMzYxMjEzMH0.i0kgG8UXPPZnvCIiYHKWVb8eI-evPYrUR0A6p0vvPsk, Method=GET, Endpoint=/recommender_engine/data, IP=192.168.65.1, Status=200, Duration=299ms
+2024-12-08 11:56:37,026 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/redoc, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-08 11:56:37,027 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/redoc, IP=192.168.65.1, Status=200, Duration=0ms
+2024-12-08 11:56:37,065 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-08 11:56:37,078 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, Status=200, Duration=13ms
+2024-12-09 15:54:43,141 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-09 15:54:43,143 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/docs, IP=192.168.65.1, Status=200, Duration=2ms
+2024-12-09 15:54:43,166 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-09 15:54:43,182 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/openapi.json, IP=192.168.65.1, Status=200, Duration=15ms
+2024-12-09 15:55:28,404 - INFO - Incoming request: User=Anonymous, Method=GET, Endpoint=/jobs/analyst, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-09 15:55:28,408 - INFO - Request processed: User=Anonymous, Method=GET, Endpoint=/jobs/analyst, IP=192.168.65.1, Status=401, Duration=5ms
+2024-12-09 15:55:35,572 - INFO - Incoming request: User=Basic Og==, Method=POST, Endpoint=/token, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-09 15:55:35,590 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2024-12-09 15:55:35,870 - INFO - Request processed: User=Basic Og==, Method=POST, Endpoint=/token, IP=192.168.65.1, Status=200, Duration=297ms
+2024-12-09 15:55:40,838 - INFO - Incoming request: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbWluYXRhNCIsImV4cCI6MTczMzc2MTUzNX0.Hr-C2BEQtoTykKqqv45Yfj-fjOdbwmTN2G4Qc6LE12U, Method=GET, Endpoint=/jobs/analyst, IP=192.168.65.1, UserAgent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+2024-12-09 15:55:40,899 - INFO - POST https://es01:9200/bigdata-jobs/_search [status:200 duration:0.049s]
+2024-12-09 15:55:40,900 - INFO - Request processed: User=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbWluYXRhNCIsImV4cCI6MTczMzc2MTUzNX0.Hr-C2BEQtoTykKqqv45Yfj-fjOdbwmTN2G4Qc6LE12U, Method=GET, Endpoint=/jobs/analyst, IP=192.168.65.1, Status=200, Duration=62ms

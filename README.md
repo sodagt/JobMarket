@@ -57,38 +57,61 @@ Retries: Tries up to 120 times (1-second interval, 5-second timeout).
 - **Node Name and Cluster Configuration:** 
 <br>
 node.name=es03: Assigns a unique name to the node within the cluster.
+<br>
 cluster.name=${CLUSTER_NAME}: Specifies the name of the Elasticsearch cluster. All nodes in the same cluster must have the same cluster name.
+<br>
 cluster.initial_master_nodes=es01,es02,es03: Lists the initial set of nodes eligible to become master nodes. This is crucial for cluster bootstrapping.
+<br>
 discovery.seed_hosts=es01,es02: Specifies the hostnames or IPs of nodes to contact during cluster formation.
 
 - **Memory and Performance Settings:**
 <br>
 bootstrap.memory_lock=true: Prevents the JVM from swapping memory to disk, improving performance and stability.
+<br>
 "ES_JAVA_OPTS=-Xms256m -Xmx256m": Sets the minimum (-Xms) and maximum (-Xmx) heap size for the JVM to 256 MB. Adjust based on available resources.
 
 - **Security Configuration:**
 <br>
 xpack.security.enabled=true: Enables Elasticsearch's built-in security features (e.g., authentication, authorization, TLS).
+<br>
 xpack.monitoring.collection.enabled=true: Enables collection of monitoring data for the node.
 
 - **SSL/TLS for HTTP:**
 <br>
 xpack.security.http.ssl.enabled=true: Enables SSL/TLS for HTTP communications.
+<br>
 xpack.security.http.ssl.key=certs/es03/es03.key: Specifies the private key for the node’s HTTP interface.
+<br>
 xpack.security.http.ssl.certificate=certs/es03/es03.crt: Specifies the certificate for the node’s HTTP interface.
+<br>
 xpack.security.http.ssl.certificate_authorities=certs/ca/ca.crt: Provides the CA certificate to validate the SSL/TLS certificate chain.
+<br>
 xpack.security.http.ssl.verification_mode=certificate: Ensures that only certificates signed by a trusted CA are accepted.
 
 - **SSL/TLS for Transport Layer:**
 <br>
 xpack.security.transport.ssl.enabled=true: Enables SSL/TLS for transport layer communications (inter-node communication).
+<br>
 xpack.security.transport.ssl.key=certs/es03/es03.key: Specifies the private key for the transport interface.
+<br>
 xpack.security.transport.ssl.certificate=certs/es03/es03.crt: Specifies the certificate for the transport interface.
+<br>
 xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt: Provides the CA certificate to validate the SSL/TLS certificate chain for transport.
+<br>
 xpack.security.transport.ssl.verification_mode=certificate: Ensures strict verification of the transport certificates.
 
 - **Licensing:**
 <br>
 xpack.license.self_generated.type=${LICENSE}: Configures the type of license for X-Pack features (e.g., trial, basic, gold).
+<br>
+<br>
+
+Source:
+<br>
+https://discuss.elastic.co/t/data-dosent-show-in-elasicsearch/353695
+https://discuss.elastic.co/t/dependant-nodes-in-dockerized-elasticsearch-3-node-cluster/345713
+
+<br>
+<br>
 
 </p>
